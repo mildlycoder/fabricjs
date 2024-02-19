@@ -1,10 +1,15 @@
 // TextEditor.js
 import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
-
+import VariableSidebar from './variableSidebar';
 const Editor = () => {
   const canvasRef = useRef(null);
   const canvasInstance = useRef(null);
+  const [variableValues, setVariableValues] = useState({});
+  const [variableCounts, setVariableCounts] = useState({});
+
+  const [textToAdd, setTextToAdd] = useState('');
+  const [selectedVariableToAdd, setSelectedVariableToAdd] = useState('');
   const [backgroundImageUrl, setBackgroundImageUrl] = useState('');
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [newX, setNewX] = useState('');
@@ -54,9 +59,6 @@ const Editor = () => {
       height: 600,
     });
     canvasInstance.current = canvas; // Store canvas instance in the ref
-
-    // Initial text block
-    addText('Hello, Fabric.js!');
 
     // Event listener for text selection
     canvas.on('selection:created', () => {
@@ -135,13 +137,63 @@ const Editor = () => {
     if (selectedVariable) {
       // Add the selected variable to the canvas
       addText(`{${selectedVariable}}`);
+
+      // Update the variable counts
+      setVariableCounts((prevCounts) => ({
+        ...prevCounts,
+        [selectedVariable]: (prevCounts[selectedVariable] || 0) + 1,
+      }));
     }
   };
+
+  const handleVariableValueChange = (variable, value) => {
+    setVariableValues((prevValues) => ({
+      ...prevValues,
+      [variable]: value,
+    }));
+
+    // Update the canvas if needed (e.g., replace the existing text with the updated value)
+    const objects = canvasInstance.current.getObjects();
+    objects.forEach((obj) => {
+      if (obj.type === 'textbox' && obj.text.includes(`{${variable}}`)) {
+        const newText = obj.text.replace(`{${variable}}`, value);
+        obj.set({ text: newText });
+        canvasInstance.current.renderAll();
+      }
+    });
+  };
+
+  const handleAddTextOrVariable = () => {
+    const text = prompt('Enter text:');
+    setTextToAdd(text);
+  };
+
+  const handleAddOnCanvas = () => {
+    if (textToAdd !== null) {
+      const combinedText = selectedVariableToAdd ? `${textToAdd} {${selectedVariableToAdd}}` : textToAdd;
+      addText(combinedText);
+
+      // Update the variable counts
+      if (selectedVariableToAdd) {
+        setVariableCounts((prevCounts) => ({
+          ...prevCounts,
+          [selectedVariableToAdd]: (prevCounts[selectedVariableToAdd] || 0) + 1,
+        }));
+      }
+    }
+    setTextToAdd('');
+    setSelectedVariableToAdd('');
+  };
+
 
   return (
     <div>
       <div>
-
+      <VariableSidebar 
+       variables={variables}
+       variableCounts={variableCounts}
+       onVariableValueChange={handleVariableValueChange}
+      />
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddText}>Add Text Block</button>
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddBackgroundImage}>Add Background Image</button>
         <button className='p-2 bg-gray-200 m-3' onClick={handleRemoveBackgroundImage}>Remove Background Image</button>
@@ -162,6 +214,29 @@ const Editor = () => {
           <input type="text" value={newY} onChange={(e) => setNewY(e.target.value)} />
           <button className='p-2 bg-gray-200 m-3' onClick={handleUpdateCoordinates}>Update Coordinates</button>
         </div>
+        <div>
+        <button className='p-2 bg-gray-200 m-3' onClick={handleAddTextOrVariable}>
+          Add Text/Variable
+        </button>
+        {textToAdd !== null && (
+          <div className='mx-3'>
+            <label>Text:</label>
+            <input type="text" value={textToAdd} onChange={(e) => setTextToAdd(e.target.value)} />
+            <label>Variable:</label>
+            <select value={selectedVariableToAdd} onChange={(e) => setSelectedVariableToAdd(e.target.value)}>
+              <option value="">Select Variable</option>
+              {variables.map((variable) => (
+                <option key={variable} value={variable}>
+                  {variable}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+        <button className='p-2 bg-gray-200 m-3' onClick={handleAddOnCanvas}>
+          Add on Canvas
+        </button>
+      </div>
       </div>
       <canvas className='border-4 mx-3 border-blue-500' ref={canvasRef} />
     </div>
