@@ -1,0 +1,427 @@
+{
+  "templateDetails": {
+    "templateWidth": 842,
+    "templateHeight": 595,
+    "templateLabel": "Testing Template 2023 11 27",
+    "id": "65644acba97079c8e8e95c2e",
+    "templateNumber": "STAGE-TD-000390",
+    "_issuingAuthorityId": "64e348ee90510263cdda1ba3",
+    "_departmentId": [
+      "64e348ee90510263cdda1ba6",
+      "653c9481f2d46f7601b4ea05"
+    ],
+    "latestVersion": "v1.0",
+    "thumbnailURL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/stage/64e348ee90510263cdda1ba3/template-designer/assets/thumbnails/Testing_Template_2023_11_27000390.png"
+  },
+  "tabs": [
+    {
+      "isFlippable": true,
+      "label": "Certificate",
+      "id": "certificate",
+      "variables": [
+        {
+          "updatedValue": "",
+          "_id": "64dca4ae2c769513125c1a5f",
+          "name": "profilePhoto",
+          "type": "image",
+          "label": "Profile Photo",
+          "defaultValue": "https://mms-edufied-ciap-uploadbucket-1.s3.amazonaws.com/dev/template-designer/image/649abd010bf563ffb1ec69bd/pexelspixabay220453.jpg",
+          "credentialsSchemaMapping": "recipient.profilePhoto"
+        },
+        {
+          "updatedValue": "",
+          "_id": "64dca4ae2c769513125c1a33",
+          "name": "name",
+          "type": "string",
+          "label": "Certificate Printed Name",
+          "defaultValue": "John Doe",
+          "credentialsSchemaMapping": "recipient.name"
+        },
+        {
+          "updatedValue": "",
+          "_id": "64dca4ae2c769513125c1a87",
+          "name": "address",
+          "type": "string",
+          "label": "Address",
+          "defaultValue": "BLOCK ABC, MAKATI CITY",
+          "credentialsSchemaMapping": "additionalData.address"
+        },
+        {
+          "updatedValue": "",
+          "_id": "64dca4ae2c769513125c1a83",
+          "name": "qrCustomVariable",
+          "type": "string",
+          "label": "QR Custom Variable",
+          "defaultValue": "text",
+          "credentialsSchemaMapping": "additionalData.qrCustomVariable"
+        },
+        {
+          "updatedValue": "",
+          "_id": "64dca4ae2c769513125c1b27",
+          "name": "openCertURL",
+          "type": "string",
+          "label": "Open Certificate URL",
+          "defaultValue": "https://demo.edufied.co/onchain/verify/openCert?link=5daf053bdd1c9929931a4ae9-1571702400-t2ioQru0Rj",
+          "credentialsSchemaMapping": "additionalData.openCertURL"
+        },
+        {
+          "updatedValue": "",
+          "_id": "64dca4ae2c769513125c1a50",
+          "name": "documentId",
+          "type": "string",
+          "label": "Credential Id",
+          "defaultValue": "64a82a9eb8c16046ce2f5a21",
+          "credentialsSchemaMapping": "id"
+        }
+      ],
+      "assets": [
+        {
+          "assetId": "653c8fbef2d46f7601b4e93e",
+          "isGlobalAsset": false,
+          "assetType": "bg-image",
+          "data": {
+            "fileName": "Half-empty.png",
+            "fileType": "bg-image",
+            "URL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/stage/64e348ee90510263cdda1ba3/template-designer/assets/bg-images/Halfempty.png"
+          }
+        },
+        {
+          "assetId": "656439d3baf4fdb8265a70d6",
+          "isGlobalAsset": true,
+          "assetType": "image",
+          "data": {
+            "fileName": "filpass-variable-profile.png",
+            "fileType": "image",
+            "URL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/filpass-variable-profile.png"
+          }
+        },
+        {
+          "assetId": "656439d3baf4fdb8265a7063",
+          "assetType": "font",
+          "isGlobalAsset": true,
+          "data": {
+            "name": "Arial",
+            "variations": {
+              "regular": {
+                "fileName": "arial.ttf",
+                "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/arial.ttf"
+              },
+              "italic": {
+                "fileName": "ariali.ttf",
+                "url": "fonts/ariali.ttf"
+              },
+              "boldItalic": {
+                "fileName": "arialbi.ttf",
+                "url": "fonts/arialbi.ttf"
+              },
+              "bold": {
+                "fileName": "arial-bold.ttf",
+                "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/arial-bold.ttf"
+              }
+            }
+          }
+        },
+        {
+          "assetId": "653c8fe0f2d46f7601b4e94c",
+          "isGlobalAsset": false,
+          "assetType": "bg-image",
+          "data": {
+            "fileName": "Half Empty.png",
+            "fileType": "bg-image",
+            "URL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/stage/64e348ee90510263cdda1ba3/template-designer/assets/bg-images/Half_Empty.png"
+          }
+        }
+      ],
+      "pages": [
+        {
+          "tabId": "certificate",
+          "pageTitle": "Front Page",
+          "pageNumber": 1,
+          "pageWidth": 842,
+          "pageHeight": 595,
+          "pageBackgroundURL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/stage/64e348ee90510263cdda1ba3/template-designer/assets/bg-images/Halfempty.png",
+          "pageCanvasComponents": {
+            "components": [
+              {
+                "variableId": "64dca4ae2c769513125c1a5f",
+                "type": "image",
+                "url": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/filpass-variable-profile.png",
+                "containerProperties": {
+                  "x": 45,
+                  "y": 219,
+                  "width": 179,
+                  "height": 230,
+                  "horizontalAlignment": "center",
+                  "verticalAlignment": "middle"
+                },
+                "aspectRatio": ""
+              },
+              {
+                "variableId": "64dca4ae2c769513125c1a33",
+                "type": "autoResizeText",
+                "options": {
+                  "allowAutoShrinkGreaterThanFirstMaxChars": true,
+                  "allowTwoLines": true,
+                  "startingFontSize": 20,
+                  "firstLineMaxChars": 45,
+                  "resizeCharacterLimit": 55
+                },
+                "containerProperties": {
+                  "x": 255,
+                  "y": 226,
+                  "width": 207,
+                  "height": 50,
+                  "horizontalAlignment": "center",
+                  "verticalAlignment": "middle"
+                },
+                "typography": {
+                  "isItalic": false,
+                  "isUnderlined": false,
+                  "color": "black",
+                  "fontSize": 20,
+                  "fontFamily": "Arial",
+                  "fontWeight": 400
+                }
+              },
+              {
+                "variableId": "64dca4ae2c769513125c1a87",
+                "type": "autoResizeText",
+                "options": {
+                  "allowAutoShrinkGreaterThanFirstMaxChars": true,
+                  "allowTwoLines": true,
+                  "startingFontSize": 20,
+                  "firstLineMaxChars": 45,
+                  "resizeCharacterLimit": 55
+                },
+                "containerProperties": {
+                  "x": 254,
+                  "y": 304,
+                  "width": 301,
+                  "height": 50,
+                  "horizontalAlignment": "center",
+                  "verticalAlignment": "middle"
+                },
+                "typography": {
+                  "isItalic": false,
+                  "isUnderlined": false,
+                  "color": "black",
+                  "fontSize": 20,
+                  "fontFamily": "Arial",
+                  "fontWeight": 400
+                }
+              },
+              {
+                "variableId": "64dca4ae2c769513125c1b27",
+                "type": "image",
+                "url": "",
+                "containerProperties": {
+                  "x": 614,
+                  "y": 348,
+                  "width": 100,
+                  "height": 100,
+                  "horizontalAlignment": "center",
+                  "verticalAlignment": "middle"
+                }
+              }
+            ],
+            "paragraphs": []
+          }
+        },
+        {
+          "tabId": "certificate",
+          "pageTitle": "Back Page",
+          "pageNumber": 2,
+          "pageWidth": 842,
+          "pageHeight": 595,
+          "pageBackgroundURL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/stage/64e348ee90510263cdda1ba3/template-designer/assets/bg-images/Half_Empty.png",
+          "pageCanvasComponents": {
+            "components": [
+              {
+                "variableId": "64dca4ae2c769513125c1a83",
+                "type": "image",
+                "url": "",
+                "containerProperties": {
+                  "x": 684,
+                  "y": 55,
+                  "width": 100,
+                  "height": 100,
+                  "horizontalAlignment": "center",
+                  "verticalAlignment": "middle"
+                }
+              },
+              {
+                "variableId": "64dca4ae2c769513125c1a50",
+                "type": "autoResizeText",
+                "options": {
+                  "allowAutoShrinkGreaterThanFirstMaxChars": true,
+                  "allowTwoLines": true,
+                  "startingFontSize": 20,
+                  "firstLineMaxChars": 45,
+                  "resizeCharacterLimit": 55
+                },
+                "containerProperties": {
+                  "x": 53,
+                  "y": 476,
+                  "width": 146,
+                  "height": 50,
+                  "horizontalAlignment": "center",
+                  "verticalAlignment": "middle"
+                },
+                "typography": {
+                  "isItalic": false,
+                  "isUnderlined": false,
+                  "color": "black",
+                  "fontSize": 20,
+                  "fontFamily": "Arial",
+                  "fontWeight": 400
+                }
+              },
+              {
+                "variableId": "64dca4ae2c769513125c1a33",
+                "type": "autoResizeText",
+                "options": {
+                  "allowAutoShrinkGreaterThanFirstMaxChars": true,
+                  "allowTwoLines": true,
+                  "startingFontSize": 20,
+                  "firstLineMaxChars": 45,
+                  "resizeCharacterLimit": 55
+                },
+                "containerProperties": {
+                  "x": 198,
+                  "y": 273,
+                  "width": 444,
+                  "height": 50,
+                  "horizontalAlignment": "center",
+                  "verticalAlignment": "middle"
+                },
+                "typography": {
+                  "isItalic": false,
+                  "isUnderlined": false,
+                  "color": "black",
+                  "fontSize": 20,
+                  "fontFamily": "Arial",
+                  "fontWeight": 400
+                }
+              }
+            ],
+            "paragraphs": []
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "updatedValue": "",
+      "_id": "64dca4ae2c769513125c1a5f",
+      "name": "profilePhoto",
+      "type": "image",
+      "label": "Profile Photo",
+      "defaultValue": "https://mms-edufied-ciap-uploadbucket-1.s3.amazonaws.com/dev/template-designer/image/649abd010bf563ffb1ec69bd/pexelspixabay220453.jpg",
+      "credentialsSchemaMapping": "recipient.profilePhoto"
+    },
+    {
+      "updatedValue": "",
+      "_id": "64dca4ae2c769513125c1a33",
+      "name": "name",
+      "type": "string",
+      "label": "Certificate Printed Name",
+      "defaultValue": "John Doe",
+      "credentialsSchemaMapping": "recipient.name"
+    },
+    {
+      "updatedValue": "",
+      "_id": "64dca4ae2c769513125c1a87",
+      "name": "address",
+      "type": "string",
+      "label": "Address",
+      "defaultValue": "BLOCK ABC, MAKATI CITY",
+      "credentialsSchemaMapping": "additionalData.address"
+    },
+    {
+      "updatedValue": "",
+      "_id": "64dca4ae2c769513125c1a83",
+      "name": "qrCustomVariable",
+      "type": "string",
+      "label": "QR Custom Variable",
+      "defaultValue": "text",
+      "credentialsSchemaMapping": "additionalData.qrCustomVariable"
+    },
+    {
+      "updatedValue": "",
+      "_id": "64dca4ae2c769513125c1b27",
+      "name": "openCertURL",
+      "type": "string",
+      "label": "Open Certificate URL",
+      "defaultValue": "https://demo.edufied.co/onchain/verify/openCert?link=5daf053bdd1c9929931a4ae9-1571702400-t2ioQru0Rj",
+      "credentialsSchemaMapping": "additionalData.openCertURL"
+    },
+    {
+      "updatedValue": "",
+      "_id": "64dca4ae2c769513125c1a50",
+      "name": "documentId",
+      "type": "string",
+      "label": "Credential Id",
+      "defaultValue": "64a82a9eb8c16046ce2f5a21",
+      "credentialsSchemaMapping": "id"
+    }
+  ],
+  "assets": [
+    {
+      "assetId": "653c8fbef2d46f7601b4e93e",
+      "isGlobalAsset": false,
+      "assetType": "bg-image",
+      "data": {
+        "fileName": "Half-empty.png",
+        "fileType": "bg-image",
+        "URL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/stage/64e348ee90510263cdda1ba3/template-designer/assets/bg-images/Halfempty.png"
+      }
+    },
+    {
+      "assetId": "656439d3baf4fdb8265a70d6",
+      "isGlobalAsset": true,
+      "assetType": "image",
+      "data": {
+        "fileName": "filpass-variable-profile.png",
+        "fileType": "image",
+        "URL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/filpass-variable-profile.png"
+      }
+    },
+    {
+      "assetId": "656439d3baf4fdb8265a7063",
+      "assetType": "font",
+      "isGlobalAsset": true,
+      "data": {
+        "name": "Arial",
+        "variations": {
+          "regular": {
+            "fileName": "arial.ttf",
+            "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/arial.ttf"
+          },
+          "italic": {
+            "fileName": "ariali.ttf",
+            "url": "fonts/ariali.ttf"
+          },
+          "boldItalic": {
+            "fileName": "arialbi.ttf",
+            "url": "fonts/arialbi.ttf"
+          },
+          "bold": {
+            "fileName": "arial-bold.ttf",
+            "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/arial-bold.ttf"
+          }
+        }
+      }
+    },
+    {
+      "assetId": "653c8fe0f2d46f7601b4e94c",
+      "isGlobalAsset": false,
+      "assetType": "bg-image",
+      "data": {
+        "fileName": "Half Empty.png",
+        "fileType": "bg-image",
+        "URL": "https://filpass-upload-bucket-non-production.s3.ap-southeast-1.amazonaws.com/stage/64e348ee90510263cdda1ba3/template-designer/assets/bg-images/Half_Empty.png"
+      }
+    }
+  ]
+}

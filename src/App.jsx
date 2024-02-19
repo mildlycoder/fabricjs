@@ -2,15 +2,13 @@
 import React from 'react';
 import Editor from './Editor';
 import './App.css';
-
+import dummy from './dummy.json'
 function App() {
+  const template = dummy
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Fabric.js </h1>
-      </header>
       <main>
-        <Editor />
+        <Editor templateData={template}/>
       </main>
     </div>
   );
