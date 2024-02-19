@@ -1,4 +1,3 @@
-// TextEditor.js
 import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import VariableSidebar from './variableSidebar';
@@ -7,7 +6,10 @@ const Editor = () => {
   const canvasInstance = useRef(null);
   const [variableValues, setVariableValues] = useState({});
   const [variableCounts, setVariableCounts] = useState({});
-
+  const [selectedColor, setSelectedColor] = useState('black');
+  const [selectedFontSize, setSelectedFontSize] = useState(20);
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
   const [textToAdd, setTextToAdd] = useState('');
   const [selectedVariableToAdd, setSelectedVariableToAdd] = useState('');
   const [backgroundImageUrl, setBackgroundImageUrl] = useState('');
@@ -185,6 +187,40 @@ const Editor = () => {
     setSelectedVariableToAdd('');
   };
 
+  const handleColorChange = (color) => {
+    if (selectedComponent && selectedComponent.type === 'textbox') {
+      selectedComponent.set({ fill: color });
+      canvasInstance.current.renderAll();
+      setSelectedColor(color);
+    }
+  };
+
+  const handleFontSizeChange = (fontSize) => {
+    if (selectedComponent && selectedComponent.type === 'textbox') {
+      selectedComponent.set({ fontSize: fontSize });
+      canvasInstance.current.renderAll();
+      setSelectedFontSize(fontSize);
+    }
+  };
+
+  const handleBoldToggle = () => {
+    if (selectedComponent && selectedComponent.type === 'textbox') {
+      const currentFontWeight = selectedComponent.get('fontWeight') || 'normal';
+      selectedComponent.set({ fontWeight: currentFontWeight === 'bold' ? 'normal' : 'bold' });
+      canvasInstance.current.renderAll();
+      setIsBold(!isBold);
+    }
+  };
+
+  const handleItalicToggle = () => {
+    if (selectedComponent && selectedComponent.type === 'textbox') {
+      const currentFontStyle = selectedComponent.get('fontStyle') || 'normal';
+      selectedComponent.set({ fontStyle: currentFontStyle === 'italic' ? 'normal' : 'italic' });
+      canvasInstance.current.renderAll();
+      setIsItalic(!isItalic);
+    }
+  };
+
 
   return (
     <div>
@@ -214,6 +250,28 @@ const Editor = () => {
           <input type="text" value={newY} onChange={(e) => setNewY(e.target.value)} />
           <button className='p-2 bg-gray-200 m-3' onClick={handleUpdateCoordinates}>Update Coordinates</button>
         </div>
+        {selectedComponent && selectedComponent.type === 'textbox' && (
+        <div>
+          <label>Color:</label>
+          <input
+            type="color"
+            value={selectedColor}
+            onChange={(e) => handleColorChange(e.target.value)}
+          />
+          <label>Font Size:</label>
+          <input
+            type="number"
+            value={selectedFontSize}
+            onChange={(e) => handleFontSizeChange(e.target.value)}
+          />
+           <button className={`p-2 bg-gray-200 m-3 ${isBold ? 'font-bold' : ''}`} onClick={handleBoldToggle}>
+            Bold
+          </button>
+          <button className={`p-2 bg-gray-200 m-3 ${isItalic ? 'italic' : ''}`} onClick={handleItalicToggle}>
+            Italic
+          </button>
+        </div>
+      )}
         <div>
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddTextOrVariable}>
           Add Text/Variable
