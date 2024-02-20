@@ -17,15 +17,17 @@ const Editor = () => {
   const [newX, setNewX] = useState('');
   const [newY, setNewY] = useState('');
   const [selectedVariable, setSelectedVariable] = useState('');
+  const [inputText, setInputText] = useState('');
   const variables = ['birthdate', 'address', 'fname', 'lname'];
 
-  const addText = (text) => {
+  const addText = (text, variable) => {
     const canvas = canvasInstance.current;
     const textbox = new fabric.Textbox(text, {
       left: 10,
       top: 10,
       fontSize: 20,
       fill: 'black',
+      id: variable? variable : ""
     });
     canvas.add(textbox);
   };
@@ -101,6 +103,23 @@ const Editor = () => {
     }
   };
 
+  const handleInputChange = (e) => {
+    setInputText(e.target.value);
+
+    // Update text for all elements with the same id
+    const objects = canvasInstance.current.getObjects();
+    const selectedId = selectedComponent?.id;
+    if (selectedId) {
+      objects.forEach((obj) => {
+        if (obj.type === 'textbox' && obj.id === selectedId) {
+          obj.set({ text: e.target.value });
+        }
+      });
+
+      canvasInstance.current.renderAll();
+    }
+  };
+
   const handleAddBackgroundImage = () => {
     const imageUrl = prompt('Enter the URL for the background image:');
     if (imageUrl !== null) {
@@ -138,7 +157,7 @@ const Editor = () => {
   const handleAddVariable = () => {
     if (selectedVariable) {
       // Add the selected variable to the canvas
-      addText(`{${selectedVariable}}`);
+      addText(`{${selectedVariable}}`, selectedVariable);
 
       // Update the variable counts
       setVariableCounts((prevCounts) => ({
@@ -223,7 +242,7 @@ const Editor = () => {
 
 
   return (
-    <div>
+    <div className='mb-10'>
       <div>
       <VariableSidebar 
        variables={variables}
@@ -294,9 +313,16 @@ const Editor = () => {
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddOnCanvas}>
           Add on Canvas
         </button>
+
+        {selectedComponent && selectedComponent.type === 'textbox' && selectedComponent.id && (
+        <div className='mx-3 '>
+          <label>Edit Variable</label>
+          <input type="text" className='bg-gray-400 p-2 m-3' value={inputText} onChange={handleInputChange} />
+        </div>
+      )}
       </div>
       </div>
-      <canvas className='border-4 mx-3 border-blue-500' ref={canvasRef} />
+      <canvas className='border-4 m-10 border-blue-500' ref={canvasRef} />
     </div>
   );
 };
