@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import VariableSidebar from './variableSidebar';
+import { saveAs } from 'file-saver';
 const Editor = () => {
   const canvasRef = useRef(null);
   const canvasInstance = useRef(null);
@@ -240,9 +241,17 @@ const Editor = () => {
     }
   };
 
+  const handleConvertToJSON = () => {
+    const canvas = canvasInstance.current;
+    const canvasJSON = JSON.stringify(canvas.toObject(['id', 'left', 'top', 'type', 'text', 'fill', 'fontSize', 'fontWeight', 'fontStyle']));
+    console.log(canvasJSON)
+    const blob = new Blob([canvasJSON], { type: 'application/json' });
+    saveAs(blob, 'canvas.json');
+  };
+
 
   return (
-    <div className='mb-10'>
+    <div className='m-10'>
       <div>
       <VariableSidebar 
        variables={variables}
@@ -321,8 +330,11 @@ const Editor = () => {
         </div>
       )}
       </div>
+      <button className='p-2 bg-gray-200 m-3' onClick={handleConvertToJSON}>
+          Convert to JSON
+        </button>
       </div>
-      <canvas className='border-4 m-10 border-blue-500' ref={canvasRef} />
+      <canvas className='border-4 border-blue-500' ref={canvasRef} />
     </div>
   );
 };
