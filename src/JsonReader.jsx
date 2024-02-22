@@ -5,6 +5,7 @@ const JsonReader = () => {
   const fileInputRef = useRef(null);
   const canvasRef = useRef(null);
   const [matchingVariables, setMatchingVariables] = useState([]);
+  const [canvasData, setCanvasData] = useState()
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -38,23 +39,34 @@ const JsonReader = () => {
 
   const loadCanvasFromJson = (jsonData) => {
     const parsedData = JSON.parse(jsonData);
-
+  
     // Create a new canvas
     const canvas = new fabric.Canvas(canvasRef.current, {
       width: 800,
       height: 600,
     });
-
+  
     // Load objects from JSON onto the new canvas
     canvas.loadFromJSON(parsedData, () => {
       const matchingVars = findMatchingVariables(parsedData.objects);
       setMatchingVariables(matchingVars);
+  
+      // Update state with parsedData
+      setCanvasData(parsedData);
+      
+      // No need to log here, move the log to useEffect
+  
       canvas.renderAll();
     });
   };
+  
+  // Use useEffect to log the updated state after it has been set
+  useEffect(() => {
+    console.log(canvasData);
+  }, [canvasData]);
+  
 
   const findMatchingVariables = (objects) => {
-    console.log(objects)
     const matchingVars = [];
 
     objects.forEach((obj) => {
@@ -62,7 +74,6 @@ const JsonReader = () => {
         matchingVars.push({ ...obj });
       }
     });
-    console.log(matchingVars)
     return matchingVars;
   };
 
@@ -70,6 +81,43 @@ const JsonReader = () => {
     console.log('Matching Variables:', matchingVariables);
     // You can perform any additional actions with the matchingVariables here
   }, [matchingVariables]);
+
+  const updateVariableValue = (variableId, variableValue) => {
+    setCanvasData((prevCanvasData) => {
+      // Create a copy of the canvas data to avoid mutating the state directly
+      const updatedCanvasData = { ...prevCanvasData };
+  
+      // Update the text property of the objects with matching variableId
+      updatedCanvasData.objects = updatedCanvasData.objects.map((obj) => {
+        if (obj.id === variableId) {
+          return { ...obj, text: variableValue };
+        }
+        return obj;
+      });
+  
+      // Update matching variables with the modified object
+      const updatedMatchingVariables = findMatchingVariables(updatedCanvasData.objects);
+  
+      // Set both canvas data and matching variables in the state
+      setCanvasData(updatedCanvasData);
+      setMatchingVariables(updatedMatchingVariables);
+  
+      return updatedCanvasData;
+    });
+
+
+    const canvas = new fabric.Canvas(canvasRef.current, {
+        width: 800,
+        height: 600,
+      });
+    
+      // Load objects from JSON onto the new canvas
+      canvas.loadFromJSON(canvasData, () => {
+        canvas.renderAll();
+      });
+  };
+  
+  
 
   return (
     <div className='m-10'>
@@ -93,6 +141,7 @@ const JsonReader = () => {
                             <div>{variable.id}</div>
                             <input
                             className='bg-gray-200 p-1'
+                            onChange={(e) => updateVariableValue(variable.id, e.target.value)}
                             value={variable.text} 
                             type="text" />
                         </div>
