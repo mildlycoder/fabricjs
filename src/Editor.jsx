@@ -20,6 +20,8 @@ const Editor = () => {
   const [selectedVariable, setSelectedVariable] = useState('');
   const [inputText, setInputText] = useState('');
   const variables = ['birthdate', 'address', 'fname', 'lname'];
+  const [canvasWidth, setCanvasWidth] = useState(800);
+  const [canvasHeight, setCanvasHeight] = useState(600);
 
   const addText = (text, variable) => {
     const canvas = canvasInstance.current;
@@ -60,10 +62,10 @@ const Editor = () => {
 
   useEffect(() => {
     const canvas = new fabric.Canvas(canvasRef.current, {
-      width: 800,
-      height: 600,
+      width: canvasWidth,
+      height: canvasHeight,
     });
-    canvasInstance.current = canvas; // Store canvas instance in the ref
+    canvasInstance.current = canvas // Store canvas instance in the ref
 
     // Event listener for text selection
     canvas.on('selection:created', () => {
@@ -95,7 +97,7 @@ const Editor = () => {
     return () => {
       canvas.dispose();
     };
-  }, []);
+  }, [canvasWidth, canvasHeight]);
 
   const handleAddText = () => {
     const text = 'edit your text here';
@@ -241,15 +243,23 @@ const Editor = () => {
     }
   };
 
+  
   const handleConvertToJSON = () => {
     const canvas = canvasInstance.current;
     const canvasJSON = JSON.stringify(canvas.toObject(['id', 'left', 'top', 'type', 'text', 'fill', 'fontSize', 'fontWeight', 'fontStyle']));
     console.log(canvasJSON)
-    const blob = new Blob([canvasJSON], { type: 'application/json' });
+    const jsonWithDimensions = {
+      canvasWidth,
+      canvasHeight,
+      objects: JSON.parse(canvasJSON).objects,
+      backgroundImage: JSON.parse(canvasJSON).backgroundImage
+    };
+    
+    console.log(jsonWithDimensions);
+
+    const blob = new Blob([JSON.stringify(jsonWithDimensions)], { type: 'application/json' });
     saveAs(blob, 'canvas.json');
   };
-
-
   return (
     <div className='m-10'>
       <div>
@@ -258,6 +268,12 @@ const Editor = () => {
        variableCounts={variableCounts}
        onVariableValueChange={handleVariableValueChange}
       />
+        <div>
+        <label>Canvas Width:</label>
+        <input type="number" value={canvasWidth} onChange={(e) => setCanvasWidth(parseInt(e.target.value, 10))} />
+        <label>Canvas Height:</label>
+        <input type="number" value={canvasHeight} onChange={(e) => setCanvasHeight(parseInt(e.target.value, 10))} />
+      </div>
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddText}>Add Text Block</button>
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddBackgroundImage}>Add Background Image</button>
         <button className='p-2 bg-gray-200 m-3' onClick={handleRemoveBackgroundImage}>Remove Background Image</button>
