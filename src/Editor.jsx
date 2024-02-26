@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import VariableSidebar from './variableSidebar';
 import { saveAs } from 'file-saver';
+import { css } from '@emotion/react';
+
 const Editor = () => {
   const canvasRef = useRef(null);
   const canvasInstance = useRef(null);
@@ -22,6 +24,89 @@ const Editor = () => {
   const variables = ['birthdate', 'address', 'fname', 'lname'];
   const [canvasWidth, setCanvasWidth] = useState(800);
   const [canvasHeight, setCanvasHeight] = useState(600);
+  const [selectedFontFamily, setSelectedFontFamily] = useState('Arial');
+  const fonts = [{
+    "name": "Arial",
+    "variations": {
+      "regular": {
+        "fileName": "arial.ttf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/arial.ttf"
+      },
+      "italic":{
+        "fileName":"ariali.ttf",
+        "url":"fonts/ariali.ttf"
+      },
+      "boldItalic":{
+        "fileName":"arialbi.ttf",
+        "url":"fonts/arialbi.ttf"
+      },
+      "bold": {
+        "fileName": "arial-bold.ttf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/arial-bold.ttf"
+      }
+    }
+  },
+  {
+    "name": "Lato",
+    "variations": {
+      "regular": {
+        "fileName": "Lato-Regular.ttf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf"
+      },
+      "bold": {
+        "fileName": "Lato-Bold.ttf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Bold.ttf"
+      },
+      "italic": {
+        "fileName": "Lato-Italic.ttf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Italic.ttf"
+      },
+      "boldItalic": {
+        "fileName": "Lato-BoldItalic.ttf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-BoldItalic.ttf"
+      }
+    }
+  },]
+
+  const globalFontStyles = css`
+  @font-face {
+    font-family: 'Arial';
+    font-weight: normal;
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/arial.ttf');
+  }
+
+  @font-face {
+    font-family: 'Arial';
+    font-weight: bold;
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/arial-bold.ttf');
+  }
+
+  @font-face {
+    font-family: 'Lato';
+    font-weight: normal;
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf');
+  }
+
+  @font-face {
+    font-family: 'Lato';
+    font-weight: bold;
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Bold.ttf');
+  }
+
+  @font-face {
+    font-family: 'Lato';
+    font-style: italic;
+    font-weight: normal;
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Italic.ttf');
+  }
+
+  @font-face {
+    font-family: 'Lato';
+    font-style: italic;
+    font-weight: bold;
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-BoldItalic.ttf');
+  }
+`;
 
   const addText = (text, variable) => {
     const canvas = canvasInstance.current;
@@ -50,6 +135,15 @@ const Editor = () => {
       canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
       setBackgroundImageUrl(imageUrl);
     });
+  };
+
+  const handleFontFamilyChange = (fontFamily) => {
+    setSelectedFontFamily(fontFamily);
+
+    if (selectedComponent && selectedComponent.type === 'textbox') {
+      selectedComponent.set({ fontFamily: fontFamily });
+      canvasInstance.current.renderAll();
+    }
   };
 
   useEffect(() => {
@@ -92,6 +186,10 @@ const Editor = () => {
         console.log('Text modified:', modifiedObject.text);
       }
     });
+
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = globalFontStyles.styles;
+    document.head.appendChild(styleElement);
 
     // Cleanup function
     return () => {
@@ -302,6 +400,18 @@ const Editor = () => {
             value={selectedColor}
             onChange={(e) => handleColorChange(e.target.value)}
           />
+           <label>Font Family:</label>
+          <select value={selectedFontFamily} onChange={(e) => handleFontFamilyChange(e.target.value)}>
+            {fonts.map((font) => (
+              <optgroup key={font.name} label={font.name}>
+                {Object.keys(font.variations).map((variation) => (
+                  <option key={variation} value={font.variations[variation].fileName}>
+                    {variation}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
           <label>Font Size:</label>
           <input
             type="number"

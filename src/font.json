@@ -1,0 +1,383 @@
+{
+    [
+        {
+          "name": "Arial",
+          "variations": {
+            "regular": {
+              "fileName": "arial.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/arial.ttf"
+            },
+            "italic":{
+              "fileName":"ariali.ttf",
+              "url":"fonts/ariali.ttf"
+            },
+            "boldItalic":{
+              "fileName":"arialbi.ttf",
+              "url":"fonts/arialbi.ttf"
+            },
+            "bold": {
+              "fileName": "arial-bold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/arial-bold.ttf"
+            }
+          }
+        },
+        {
+          "name": "Lato",
+          "variations": {
+            "regular": {
+              "fileName": "Lato-Regular.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf"
+            },
+            "bold": {
+              "fileName": "Lato-Bold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Bold.ttf"
+            },
+            "italic": {
+              "fileName": "Lato-Italic.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Italic.ttf"
+            },
+            "boldItalic": {
+              "fileName": "Lato-BoldItalic.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-BoldItalic.ttf"
+            }
+          }
+        },
+        {
+          "name": "Helvetica",
+          "variations": {
+            "regular": {
+              "fileName": "Helvetica.ttf",
+              "url": "fonts/Helvetica.ttf"
+            },
+            "bold": {
+              "fileName": "Helvetica-Bold.ttf",
+              "url": "fonts/Helvetica-Bold.ttf"
+            },
+            "italic": {
+              "fileName": "Helvetica-Oblique.ttf",
+              "url": "fonts/Helvetica-Oblique.ttf"
+            },
+            "boldItalic":{
+              "fileName":"Helvetica-BoldOblique.ttf",
+              "url":"fonts/Helvetica-BoldOblique.ttf"
+            }
+          }
+        },
+        {
+          "name": "Barlow",
+          "variations": {
+            "regular": {
+              "fileName": "Barlow-Regular.ttf",
+              "url": "fonts/Barlow-Regular.ttf"
+            },
+            "bold": {
+              "fileName": "Barlow-Bold.ttf",
+              "url": "fonts/Barlow-Bold.ttf"
+            },
+            "italic": {
+              "fileName": "Barlow-Italic.ttf",
+              "url": "fonts/Barlow-Italic.ttf"
+            },
+            "boldItalic":{
+              "fileName":"Barlow-BoldItalic.ttf",
+              "url":"fonts/Barlow-BoldItalic.ttf"
+            }
+          }
+        },
+        {
+          "name": "Aktiv Grotesk",
+          "variations": {
+            "regular": {
+              "fileName": "AktivGrotesk-Regular.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/COMEMBO/AktivGrotesk-Regular.ttf"
+            }
+          }
+        },
+        {
+          "name": "Aktiv Grotesk Corp",
+          "variations": {
+            "regular": {
+              "fileName": "AktivGroteskCorp-Regular.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/COMEMBO/AktivGroteskCorp-Regular.ttf"
+            },
+            "bold": {
+              "fileName": "AktivGroteskCorp-Bold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CIOFF/AktivGroteskCorp-Bold.ttf"
+            }
+          }
+        },
+        {
+          "name": "Montserrat",
+          "variations": {
+            "regular": {
+              "fileName": "Montserrat-Regular.otf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Regular.otf"
+            },
+            "italic": {
+              "fileName": "Montserrat-Italic.otf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Italic.otf"
+            },
+            "bold": {
+              "fileName": "Montserrat-Bold.otf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Bold.otf"
+            },
+            "boldItalic": {
+              "fileName": "Montserrat-BoldItalic.otf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-BoldItalic.otf"
+            }
+          }
+        },
+        {
+          "name": "Lucida Grande",
+          "variations": {
+            "regular": {
+              "fileName": "LucidaGrande.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/LucidaGrande.ttf"
+            },
+            "bold": {
+              "fileName": "LucidaGrandeBold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/LucidaGrandeBold.ttf"
+            }
+          }
+        },
+        {
+          "name": "Arial MT",
+          "variations": {
+            "regular": {
+              "fileName": "arialmt.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/FILPASS/arialmt.ttf"
+            }
+          }
+        },
+        {
+          "name": "Arial Narrow",
+          "variations": {
+            "regular": {
+              "fileName": "ArialNarrow.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/EDUFIED/ArialNarrow.ttf"
+            }
+          }
+        },
+        {
+          "name": "Multicolore",
+          "variations": {
+            "regular": {
+              "fileName": "Multicolore.otf",
+              "url": "fonts/Multicolore.otf"
+            }
+          }
+        },
+        {
+          "name": "NewsGothicStd",
+          "variations": {
+            "regular": {
+              "fileName": "NewsGothicStd.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SIATP/NewsGothicStd.ttf"
+            },
+            "bold": {
+              "fileName": "NewsGothicStdBold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SIATP/NewsGothicStdBold.ttf"
+            }
+          }
+        },
+        {
+          "name": "Pinyon Script",
+          "variations": {
+            "regular": {
+              "fileName": "PinyonScript-Regular.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SIATP/PinyonScript-Regular.ttf"
+            }
+          }
+        },
+        {
+          "name": "Optima",
+          "variations": {
+            "regular": {
+              "fileName": "optima.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/optima.ttf"
+            },
+            "bold": {
+              "fileName": "OptimaBold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PHINMA/OptimaBold.ttf"
+            },
+            "boldItalic": {
+              "fileName": "OptimaBoldItalic.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PHINMA/OptimaBoldItalic.ttf"
+            }
+          }
+        },
+        {
+          "name": "Old English Text MT",
+          "variations": {
+            "regular": {
+              "fileName": "OLDENGL.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CMC/OLDENGL.ttf"
+            }
+          }
+        },
+        {
+          "name": "Cambria",
+          "variations": {
+            "regular": {
+              "fileName": "Cambria.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/Cambria.ttf"
+            },
+            "bold": {
+              "fileName": "cambriab.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/cambriab.ttf"
+            }
+          }
+        },
+        {
+          "name": "Veranda",
+          "variations": {
+            "regular": {
+              "fileName": "verdana.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/verdana.ttf"
+            },
+            "bold": {
+              "fileName": "verdana-bold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/verdana-bold.ttf"
+            }
+          }
+        },
+        {
+          "name": "Bodoni MT",
+          "variations": {
+            "boldItalic": {
+              "fileName": "BOD_BI.otf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SHRI/BOD_BI.otf"
+            }
+          }
+        },
+        {
+          "name": "Raleway",
+          "variations": {
+            "regular": {
+              "fileName": "Raleway-Regular.ttf",
+              "url": "fonts/Raleway-Regular.ttf"
+            },
+            "italic": {
+              "fileName": "Raleway-Italic.ttf",
+              "url": "fonts/Raleway-Italic.ttf"
+            },
+            "bold": {
+              "fileName": "Raleway-Bold.ttf",
+              "url": "fonts/Raleway-Bold.ttf"
+            },
+            "boldItalic": {
+              "fileName": "Raleway-BoldItalic.ttf",
+              "url": "fonts/Raleway-BoldItalic.ttf"
+            }
+          }
+        },
+        {
+          "name": "Calibri",
+          "variations": {
+            "regular": {
+              "fileName": "Calibri.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/EDUFIED/Calibri.ttf"
+            },
+            "bold": {
+              "fileName": "Calibri Bold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CMC/Calibri Bold.ttf"
+            },
+            "italic": {
+              "fileName": "Calibri Italic.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CMC/Calibri Italic.ttf"
+            },
+            "boldItalic": {
+              "fileName": "Calibri Bold Italic.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CMC/Calibri Bold Italic.ttf"
+            }
+          }
+        },
+        {
+          "name": "ITC Galliard",
+          "variations": {
+            "italic": {
+              "fileName": "GalliardITCbyBTItalic.otf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PHINMA/GalliardITCbyBTItalic.otf"
+            }
+          }
+        },
+        
+        {
+          "name": "Open Sans",
+          "variations": {
+            "regular": {
+              "fileName": "OpenSans-Regular.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CLICKACADEMY/OpenSans-Regular.ttf"
+            },
+            "italic": {
+              "fileName": "OpenSans-Italic.ttf",
+              "url": "fonts/OpenSans-Italic.ttf"
+            },
+            "boldItalic": {
+              "fileName": "OpenSans-BoldItalic.ttf",
+              "url": "fonts/OpenSans-BoldItalic.ttf"
+            },
+            "bold": {
+              "fileName": "OpenSans-Bold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PSITE/OpenSans-Bold.ttf"
+            }
+          }
+        },
+        {
+          "name": "Roboto",
+          "variations": {
+            "regular": {
+              "fileName": "Roboto-Regular.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/XPRIENZ/Roboto-Regular.ttf"
+            },
+            "bold": {
+              "fileName": "Roboto-Bold.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PSITE/Roboto-Bold.ttf"
+            },
+            "italic": {
+              "fileName": "Roboto-Italic.ttf",
+              "url": "fonts/Roboto-Italic.ttf"
+            },
+            "boldItalic": {
+              "fileName": "Roboto-BoldItalic.ttf",
+              "url": "fonts/Roboto-BoldItalic.ttf"
+            }
+          }
+        },
+        {
+          "name": "Great Vibes",
+          "variations": {
+            "regular": {
+              "fileName": "GreatVibes-Regular.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PSITE/GreatVibes-Regular.ttf"
+            }
+          }
+        },
+        {
+          "name": "Candara",
+          "variations": {
+            "bold": {
+              "fileName": "Candara.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PSITE/Candara.ttf"
+            }
+          }
+        },
+        {
+          "name": "Stencil",
+          "variations": {
+            "regular": {
+              "fileName": "Stencil Regular.ttf",
+              "url": "fonts/Stencil Regular.ttf"
+            } 
+          }
+        },
+        {
+          "name": "Tahoma",
+          "variations": {
+            "regular": {
+              "fileName": "TahomaRegular.ttf",
+              "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/BEACON/TahomaRegular.ttf"
+            }
+          }
+        },   
+}
