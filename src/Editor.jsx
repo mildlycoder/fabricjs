@@ -65,8 +65,44 @@ const Editor = () => {
         "fileName": "Lato-BoldItalic.ttf",
         "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-BoldItalic.ttf"
       }
+    },
+  },
+  {
+    "name": "Aktiv Grotesk Corp",
+    "variations": {
+      "regular": {
+        "fileName": "AktivGroteskCorp-Regular.ttf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/COMEMBO/AktivGroteskCorp-Regular.ttf"
+      },
+      "bold": {
+        "fileName": "AktivGroteskCorp-Bold.ttf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CIOFF/AktivGroteskCorp-Bold.ttf"
+      }
     }
-  },]
+  },
+
+  {
+    "name": "Montserrat",
+    "variations": {
+      "regular": {
+        "fileName": "Montserrat-Regular.otf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Regular.otf"
+      },
+      "italic": {
+        "fileName": "Montserrat-Italic.otf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Italic.otf"
+      },
+      "bold": {
+        "fileName": "Montserrat-Bold.otf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Bold.otf"
+      },
+      "boldItalic": {
+        "fileName": "Montserrat-BoldItalic.otf",
+        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-BoldItalic.otf"
+      }
+    }
+  },
+]
 
   const globalFontStyles = css`
   @font-face {
@@ -76,28 +112,15 @@ const Editor = () => {
   }
 
   @font-face {
-    font-family: 'Arial';
-    font-weight: bold;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/arial-bold.ttf');
-  }
-
-  @font-face {
     font-family: 'Lato';
     font-weight: normal;
     src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf');
   }
-
-  @font-face {
-    font-family: 'Lato';
-    font-weight: bold;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Bold.ttf');
-  }
-
   @font-face {
     font-family: 'Lato';
     font-style: italic;
     font-weight: normal;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Italic.ttf');
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf');
   }
 
   @font-face {
@@ -105,6 +128,17 @@ const Editor = () => {
     font-style: italic;
     font-weight: bold;
     src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-BoldItalic.ttf');
+  }
+  @font-face {
+    font-family: 'Aktiv Grotesk';
+    font-weight: normal;
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/COMEMBO/AktivGroteskCorp-Regular.ttf');
+  }
+
+  @font-face {
+    font-family: 'Montserrat';
+    font-weight: normal;
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Regular.otf');
   }
 `;
 
@@ -140,8 +174,10 @@ const Editor = () => {
   const handleFontFamilyChange = (fontFamily) => {
     setSelectedFontFamily(fontFamily);
 
-    if (selectedComponent && selectedComponent.type === 'textbox') {
-      selectedComponent.set({ fontFamily: fontFamily });
+    if (selectedComponent) {
+      console.log('helloow')
+      selectedComponent.set({ fontFamily: selectedFontFamily });
+      console.log(selectedComponent)
       canvasInstance.current.renderAll();
     }
   };
@@ -400,16 +436,11 @@ const Editor = () => {
             value={selectedColor}
             onChange={(e) => handleColorChange(e.target.value)}
           />
-           <label>Font Family:</label>
           <select value={selectedFontFamily} onChange={(e) => handleFontFamilyChange(e.target.value)}>
             {fonts.map((font) => (
-              <optgroup key={font.name} label={font.name}>
-                {Object.keys(font.variations).map((variation) => (
-                  <option key={variation} value={font.variations[variation].fileName}>
-                    {variation}
-                  </option>
-                ))}
-              </optgroup>
+              <option key={font.name} value={font.name}>
+                {font.name}
+              </option>
             ))}
           </select>
           <label>Font Size:</label>
