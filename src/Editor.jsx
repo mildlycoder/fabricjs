@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import VariableSidebar from './variableSidebar';
 import { saveAs } from 'file-saver';
-import { css } from '@emotion/react';
+import './fonts.css'; 
 
 const Editor = () => {
   const canvasRef = useRef(null);
@@ -24,131 +24,37 @@ const Editor = () => {
   const variables = ['birthdate', 'address', 'fname', 'lname'];
   const [canvasWidth, setCanvasWidth] = useState(800);
   const [canvasHeight, setCanvasHeight] = useState(600);
-  const [selectedFontFamily, setSelectedFontFamily] = useState('Arial');
-  const fonts = [{
-    "name": "Arial",
-    "variations": {
-      "regular": {
-        "fileName": "arial.ttf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/arial.ttf"
+  const [selectedFont, setSelectedFont] = useState('Arial');
+  const [fontVariations, setFontVariations] = useState({
+    'Lato': {
+      'Regular': {
+        fileName: 'Lato-Regular.ttf',
+        url: 'https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf',
       },
-      "italic":{
-        "fileName":"ariali.ttf",
-        "url":"fonts/ariali.ttf"
-      },
-      "boldItalic":{
-        "fileName":"arialbi.ttf",
-        "url":"fonts/arialbi.ttf"
-      },
-      "bold": {
-        "fileName": "arial-bold.ttf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/arial-bold.ttf"
-      }
-    }
-  },
-  {
-    "name": "Lato",
-    "variations": {
-      "regular": {
-        "fileName": "Lato-Regular.ttf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf"
-      },
-      "bold": {
-        "fileName": "Lato-Bold.ttf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Bold.ttf"
-      },
-      "italic": {
-        "fileName": "Lato-Italic.ttf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Italic.ttf"
-      },
-      "boldItalic": {
-        "fileName": "Lato-BoldItalic.ttf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-BoldItalic.ttf"
-      }
     },
-  },
-  {
-    "name": "Aktiv Grotesk Corp",
-    "variations": {
-      "regular": {
-        "fileName": "AktivGroteskCorp-Regular.ttf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/COMEMBO/AktivGroteskCorp-Regular.ttf"
+    'Montserrat': {
+      "Regular": {
+        fileName: "Montserrat-Regular.otf",
+        url: "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Regular.otf"
       },
-      "bold": {
-        "fileName": "AktivGroteskCorp-Bold.ttf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CIOFF/AktivGroteskCorp-Bold.ttf"
+    },
+    'Lucida Grande' : {
+      'Regular' : {
+        fileName : "LucidaGrande.ttf",
+        url:"https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/LucidaGrande.ttf"
       }
     }
-  },
-
-  {
-    "name": "Montserrat",
-    "variations": {
-      "regular": {
-        "fileName": "Montserrat-Regular.otf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Regular.otf"
-      },
-      "italic": {
-        "fileName": "Montserrat-Italic.otf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Italic.otf"
-      },
-      "bold": {
-        "fileName": "Montserrat-Bold.otf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Bold.otf"
-      },
-      "boldItalic": {
-        "fileName": "Montserrat-BoldItalic.otf",
-        "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-BoldItalic.otf"
-      }
-    }
-  },
-]
-
-  const globalFontStyles = css`
-  @font-face {
-    font-family: 'Arial';
-    font-weight: normal;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/arial.ttf');
-  }
-
-  @font-face {
-    font-family: 'Lato';
-    font-weight: normal;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf');
-  }
-  @font-face {
-    font-family: 'Lato';
-    font-style: italic;
-    font-weight: normal;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf');
-  }
-
-  @font-face {
-    font-family: 'Lato';
-    font-style: italic;
-    font-weight: bold;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-BoldItalic.ttf');
-  }
-  @font-face {
-    font-family: 'Aktiv Grotesk';
-    font-weight: normal;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/COMEMBO/AktivGroteskCorp-Regular.ttf');
-  }
-
-  @font-face {
-    font-family: 'Montserrat';
-    font-weight: normal;
-    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Regular.otf');
-  }
-`;
+  });
+  
 
   const addText = (text, variable) => {
     const canvas = canvasInstance.current;
     const textbox = new fabric.Textbox(text, {
-      left: 10,
-      top: 10,
-      fontSize: 20,
+      left: 100,
+      top: 100,
+      fontSize: 30,
       fill: 'black',
+      width: 200,
       id: variable? variable : ""
     });
     canvas.add(textbox);
@@ -169,17 +75,6 @@ const Editor = () => {
       canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
       setBackgroundImageUrl(imageUrl);
     });
-  };
-
-  const handleFontFamilyChange = (fontFamily) => {
-    setSelectedFontFamily(fontFamily);
-
-    if (selectedComponent) {
-      console.log('helloow')
-      selectedComponent.set({ fontFamily: selectedFontFamily });
-      console.log(selectedComponent)
-      canvasInstance.current.renderAll();
-    }
   };
 
   useEffect(() => {
@@ -222,10 +117,6 @@ const Editor = () => {
         console.log('Text modified:', modifiedObject.text);
       }
     });
-
-    const styleElement = document.createElement('style');
-    styleElement.innerHTML = globalFontStyles.styles;
-    document.head.appendChild(styleElement);
 
     // Cleanup function
     return () => {
@@ -377,6 +268,25 @@ const Editor = () => {
     }
   };
 
+  const loadCustomFont = (fontUrl) => {
+    fabric.util.loadFont(fontUrl, () => {
+      console.log('Custom font loaded:', fontUrl);
+    });
+  };
+  
+
+  const handleFontChange = (font) => {
+    if (selectedComponent && selectedComponent.type === 'textbox') {
+      selectedComponent.set({ fontFamily: font });
+      canvasInstance.current.renderAll();
+      setSelectedFont(font);
+       console.log(selectedComponent)
+    }
+  };
+  
+  
+  
+
   
   const handleConvertToJSON = () => {
     const canvas = canvasInstance.current;
@@ -436,13 +346,19 @@ const Editor = () => {
             value={selectedColor}
             onChange={(e) => handleColorChange(e.target.value)}
           />
-          <select value={selectedFontFamily} onChange={(e) => handleFontFamilyChange(e.target.value)}>
-            {fonts.map((font) => (
-              <option key={font.name} value={font.name}>
-                {font.name}
-              </option>
+          <select value={selectedFont} onChange={(e) => handleFontChange(e.target.value)}>
+            {Object.keys(fontVariations).map((fontName) => (
+              <optgroup key={fontName} label={fontName}>
+                {Object.keys(fontVariations[fontName]).map((fontVariation) => (
+                  <option key={fontVariation} value={fontName}>
+                    {fontVariation}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
+
+
           <label>Font Size:</label>
           <input
             type="number"

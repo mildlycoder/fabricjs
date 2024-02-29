@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'Aktiv Grotesk';
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/COMEMBO/AktivGrotesk-Regular.ttf') format('truetype');
+  }
+  
+@font-face {
+    font-family: 'Lato';
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf') format('truetype');
+  }
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Regular.otf') format('truetype')
+}
+
+@font-face {
+    font-family: "Lucida Grande";
+    src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/LucidaGrande.ttf") format('truetype');
+}
