@@ -4,11 +4,12 @@ import VariableSidebar from './variableSidebar';
 import { saveAs } from 'file-saver';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Global, css } from '@emotion/react';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
-import './fonts.css'; 
+import fontjson from './font.json'
 
 const Editor = () => {
+  const fonts = fontjson.fonts
   const canvasRef = useRef(null);
   const canvasInstance = useRef(null);
   const [variableValues, setVariableValues] = useState({});
@@ -30,6 +31,7 @@ const Editor = () => {
   const [canvasHeight, setCanvasHeight] = useState(600);
   const [selectedFont, setSelectedFont] = useState('Arial');
   const [fontVariations, setFontVariations] = useState([
+    'Arial',
     'Lato',
     'Montserrat',
     'Lucida Grande',
@@ -45,9 +47,37 @@ const Editor = () => {
     'Roboto',
     'Great Vibes',
     'Candara',
-    'Tahoma'
+    'Tahoma',
+    'Raleway',
+    'Helvetica',
+    'Stencil',
+    'NewsGothicStd',
+    'Aktiv Grotesk',
+    'Aktiv Grotesk Corp',
+    'Barlow',
+    'Arial Narrow',
+    'Arial MT',
+    'Multicolore'
   ]);
-  
+
+  const globalStyles = css`
+  ${fonts.map((font) => {
+    const { name, variations } = font;
+    return Object.keys(variations).map((variation) => {
+      const { fileName, url } = variations[variation];
+      return `
+        @font-face {
+          font-family: '${name}';
+          font-style: ${variation.includes('italic') ? 'italic' : 'normal'};
+          font-weight: ${variation.includes('bold') ? 'bold' : 'normal'};
+          src: url(${url}) format('truetype');
+        }
+      `;
+    });
+  })}
+  /* Add other global styles if needed */
+`;
+
 
   const addText = (text, variable) => {
     const canvas = canvasInstance.current;
@@ -118,6 +148,7 @@ const Editor = () => {
       const modifiedObject = e.target;
       if (modifiedObject && modifiedObject.type === 'textbox') {
         // Text modified, update properties or perform other actions
+        console.log(modifiedObject)
         console.log('Text modified:', modifiedObject.text);
       }
     });
@@ -272,21 +303,54 @@ const Editor = () => {
     }
   };
 
-  const loadCustomFont = (fontUrl) => {
-    fabric.util.loadFont(fontUrl, () => {
-      console.log('Custom font loaded:', fontUrl);
+  const loadCustomFont = (fontInfo) => {
+    const { name, variations } = fontInfo;
+  
+    Object.keys(variations).forEach((variation) => {
+      const { fileName, url } = variations[variation];
+  
+      // Create a temporary text object to trigger font loading
+      const tempText = new fabric.Text(' ', {
+        fontFamily: name,
+        fontWeight: variation.includes('bold') ? 'bold' : 'normal',
+        fontStyle: variation.includes('italic') ? 'italic' : 'normal',
+      });
+  
+      // Set the font URL for the variation
+      tempText.set({
+        fontFamily: name,
+        fontWeight: variation.includes('bold') ? 'bold' : 'normal',
+        fontStyle: variation.includes('italic') ? 'italic' : 'normal',
+        src: `url(${url}) format('truetype')`, // or 'opentype'
+      });
+  
+      // Add the temporary text object to the canvas (this is not visible)
+      canvasInstance.current.add(tempText);
     });
   };
+  
+  // Inside your Editor component
+  useEffect(() => {
+    // Load custom fonts on component mount
+    fonts.forEach((font) => loadCustomFont(font));
+  }, []); // Ensure it only runs once on mount
+  
   
 
   const handleFontChange = (font) => {
     if (selectedComponent && selectedComponent.type === 'textbox') {
-      selectedComponent.set({ fontFamily: font });
-      canvasInstance.current.renderAll();
-      setSelectedFont(font);
+      // Assuming 'fonts' is the array of font information in your JSON
+      const selectedFontInfo = fonts.find((f) => f.name === font);
+  
+      if (selectedFontInfo) {
+        loadCustomFont(selectedFontInfo); // Load the custom font
+        selectedComponent.set({ fontFamily: font });
+        canvasInstance.current.renderAll();
+        setSelectedFont(font);
+      }
     }
   };
-
+  
   useEffect(() => {
     canvasInstance.current.renderAll();
   },[selectedComponent, selectedFont])
@@ -358,10 +422,9 @@ const Editor = () => {
   
     pdfMake.createPdf(pdfDoc).open();
   };
-
-  
   return (
     <div className='m-10'>
+      <Global styles={globalStyles} />
       <div>
       <VariableSidebar 
        variables={variables}
