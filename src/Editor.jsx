@@ -286,8 +286,30 @@ const Editor = () => {
   useEffect(() => {
     canvasInstance.current.renderAll();
   },[selectedComponent, selectedFont])
+
+
   
+  const handleDeleteSelected = () => {
+    if (selectedComponent) {
+      const canvas = canvasInstance.current;
+      canvas.remove(selectedComponent);
+      canvas.renderAll();
+      setSelectedComponent(null); // Clear the selected component after deletion
+    }
+  };
+
+  useEffect(() => {
   
+    const handleKeyDown = (e) => {
+      if (e.keyCode === 46) {
+        handleDeleteSelected();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleDeleteSelected]);
   
 
   
@@ -389,6 +411,10 @@ const Editor = () => {
             </select>
           </div>
         )}
+
+        <button className='p-2 bg-gray-200 m-3' onClick={handleDeleteSelected}>
+          Delete Selected
+        </button>
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddOnCanvas}>
           Add on Canvas
         </button>

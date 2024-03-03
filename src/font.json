@@ -1,5 +1,5 @@
 {
-    [
+    "fonts": [
         {
           "name": "Arial",
           "variations": {
@@ -379,5 +379,6 @@
               "url": "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/BEACON/TahomaRegular.ttf"
             }
           }
-        },   
+        }
+    ]
 }
