@@ -17,3 +17,68 @@
     font-family: "Lucida Grande";
     src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/LucidaGrande.ttf") format('truetype');
 }
+
+@font-face {
+  font-family: "Pinyon Script";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SIATP/PinyonScript-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Optima";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SWU/optima.ttf");
+}
+
+@font-face {
+  font-family: "Old Englist Text MT";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CMC/OLDENGL.ttf");
+}
+
+@font-face {
+  font-family: "Cambria";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/Cambria.ttf");
+}
+
+@font-face {
+  font-family: "Verdana";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AMA/verdana.ttf");
+}
+
+@font-face {
+  font-family: "Bodoni MT";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/SHRI/BOD_BI.otf");
+}
+
+@font-face {
+  font-family: "Calibri";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/EDUFIED/Calibri.ttf");
+}
+
+@font-face {
+  font-family: "ITC Galliard";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PHINMA/GalliardITCbyBTItalic.otf");
+}
+
+@font-face {
+  font-family: "Open Sans";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/CLICKACADEMY/OpenSans-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/XPRIENZ/Roboto-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Great Vibes";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PSITE/GreatVibes-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Candara";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/PSITE/Candara.ttf");
+}
+
+@font-face {
+  font-family: "Tahoma";
+  src: url("https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/BEACON/TahomaRegular.ttf");
+}

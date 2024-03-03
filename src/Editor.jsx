@@ -25,26 +25,24 @@ const Editor = () => {
   const [canvasWidth, setCanvasWidth] = useState(800);
   const [canvasHeight, setCanvasHeight] = useState(600);
   const [selectedFont, setSelectedFont] = useState('Arial');
-  const [fontVariations, setFontVariations] = useState({
-    'Lato': {
-      'Regular': {
-        fileName: 'Lato-Regular.ttf',
-        url: 'https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/AKADASIA/Lato-Regular.ttf',
-      },
-    },
-    'Montserrat': {
-      "Regular": {
-        fileName: "Montserrat-Regular.otf",
-        url: "https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/Montserrat-Regular.otf"
-      },
-    },
-    'Lucida Grande' : {
-      'Regular' : {
-        fileName : "LucidaGrande.ttf",
-        url:"https://s3.ap-southeast-1.amazonaws.com/develop.renderer.bucket.files/font_files/RMC/LucidaGrande.ttf"
-      }
-    }
-  });
+  const [fontVariations, setFontVariations] = useState([
+    'Lato',
+    'Montserrat',
+    'Lucida Grande',
+    'Pinyon Script',
+    'Optima',
+    'Old English Text MT',
+    'Cambria',
+    'Verdana',
+    'Bodoni MT',
+    'Calibri',
+    'ITC Galliard',
+    'Open Sans',
+    'Roboto',
+    'Great Vibes',
+    'Candara',
+    'Tahoma'
+  ]);
   
 
   const addText = (text, variable) => {
@@ -55,6 +53,8 @@ const Editor = () => {
       fontSize: 30,
       fill: 'black',
       width: 200,
+      isWrapping: true,
+      dynamicMinWidth: 100,
       id: variable? variable : ""
     });
     canvas.add(textbox);
@@ -280,9 +280,12 @@ const Editor = () => {
       selectedComponent.set({ fontFamily: font });
       canvasInstance.current.renderAll();
       setSelectedFont(font);
-       console.log(selectedComponent)
     }
   };
+
+  useEffect(() => {
+    canvasInstance.current.renderAll();
+  },[selectedComponent, selectedFont])
   
   
   
@@ -347,15 +350,9 @@ const Editor = () => {
             onChange={(e) => handleColorChange(e.target.value)}
           />
           <select value={selectedFont} onChange={(e) => handleFontChange(e.target.value)}>
-            {Object.keys(fontVariations).map((fontName) => (
-              <optgroup key={fontName} label={fontName}>
-                {Object.keys(fontVariations[fontName]).map((fontVariation) => (
-                  <option key={fontVariation} value={fontName}>
-                    {fontVariation}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
+            {
+              fontVariations.map((font) => <option>{font}</option>)
+            }
           </select>
 
 
