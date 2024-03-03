@@ -2,10 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import VariableSidebar from './variableSidebar';
 import { saveAs } from 'file-saver';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Global, css } from '@emotion/react';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import fontjson from './font.json'
 
 const Editor = () => {
@@ -398,30 +395,6 @@ const Editor = () => {
     saveAs(blob, 'canvas.json');
   };
 
-  const handleExportPDF = () => {
-    const canvas = canvasInstance.current;
-    const objects = canvas.getObjects();
-
-  const scaleFactor = 1 / window.devicePixelRatio; 
-  const pdfWidth = canvas.width * scaleFactor;
-  const pdfHeight = canvas.height * scaleFactor;
-
-    const imageDataArray = objects.map((obj) => obj.toDataURL({format: 'jpeg', quality: 1, multiplier: 14}));
-    const pdfContent = imageDataArray.map((imageData) => ({
-      image: imageData,
-      width: pdfWidth,
-      height: pdfHeight,
-      margin: [0, 0, 0, 0],
-    }))
-
-    const pdfDoc = {
-      pageSize: { width: pdfWidth, height: pdfHeight },
-      pageOrientation: 'landscape', 
-      content: pdfContent,
-    };
-  
-    pdfMake.createPdf(pdfDoc).open();
-  };
   return (
     <div className='m-10'>
       <Global styles={globalStyles} />
@@ -523,10 +496,6 @@ const Editor = () => {
         <button className='p-2 bg-gray-200 m-3' onClick={handleConvertToJSON}>
           Convert to JSON
         </button>
-        <button className='p-2 bg-gray-200 m-3' onClick={handleExportPDF}>
-          Export as PDF
-        </button>
-
       </div>
       <canvas className='border-4 border-blue-500' ref={canvasRef} />
     </div>
