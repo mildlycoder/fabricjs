@@ -4,15 +4,15 @@ import Editor from './Editor';
 import './App.css';
 import dummy from './dummy.json'
 import JsonReader from './JsonReader';
-import EditorMultiPage from './EditorMultiPage';
+import EditorMP from './EditorMultiPage';
 function App() {
   const template = dummy
   return (
     <div className="App">
       <main>
         <Editor/>
-        {/* <EditorMultiPage /> */}
         <JsonReader />
+        <EditorMP />
       </main>
     </div>
   );

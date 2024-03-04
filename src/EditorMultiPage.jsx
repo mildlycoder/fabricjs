@@ -1,145 +1,91 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { fabric } from 'fabric';
-import { saveAs } from 'file-saver';
-import { Global, css } from '@emotion/react';
-import fontjson from './font.json';
-import FontFaceObserver from 'fontfaceobserver';
+import React, { useRef, useEffect, useState } from "react";
+import { fabric } from "fabric";
 
-const EditorMultiPage = () => {
-  const fonts = fontjson.fonts;
-  const [canvases, setCanvases] = useState([]);
-  const [activeCanvasIndex, setActiveCanvasIndex] = useState(0);
-  const [selectedComponent, setSelectedComponent] = useState(null);
+const EditorMP = () => {
+  const [selectedCanvas, setSelectedCanvas] = useState(null);
+  const canvasRefs = [useRef(null), useRef(null)];
+  const [canvasInstances, setCanvasInstances] = useState([]);
+
   useEffect(() => {
-    handleAddCanvas();
+    const canvases = canvasRefs.map((canvasRef, index) => {
+      const canvas = new fabric.Canvas(canvasRef.current);
+
+      // Additional configurations for each canvas can be added here
+      setCanvasInstances((prevInstances) => [...prevInstances, canvas]);
+
+      // Example: Add IText to each canvas
+      const text = new fabric.IText("Hello Fabric.js", {
+        left: 10,
+        top: 10,
+        fill: "black",
+      });
+
+      canvas.add(text);
+
+      // Add click event listener to each canvas
+      canvas.on("mouse:down", () => {
+        handleCanvasClick(index);
+      });
+
+      return canvas;
+    });
+
+    // Additional logic for interactivity or synchronization between canvases can be added here
+
+    return () => {
+      // Cleanup code if needed
+      canvases.forEach((canvas) => {
+        canvas.dispose();
+      });
+    };
   }, []);
 
-  const handleAddCanvas = () => {
-    const newCanvas = new fabric.Canvas(`canvas-${canvases.length + 1}`, {
-      width: 800,
-      height: 600,
-    });
-
-    newCanvas.on('selection:created', handleSelection);
-    newCanvas.on('object:modified', handleObjectModified);
-
-    setCanvases([...canvases, newCanvas]);
-    setActiveCanvasIndex(canvases.length);
+  const handleCanvasClick = (index) => {
+    setSelectedCanvas(index);
+    // Add additional logic for handling canvas click, e.g., highlighting or editing
   };
 
-  const handleSelection = (e) => {
-    const selectedObject = e.target;
-    setSelectedComponent(selectedObject);
-  };
+  const addITextToSelectedCanvas = () => {
+    if (selectedCanvas !== null) {
+      const canvas = canvasInstances[selectedCanvas];
 
-  const handleObjectModified = (e) => {
-    const modifiedObject = e.target;
-    if (modifiedObject && modifiedObject.type === 'textbox') {
-      console.log('Text modified:', modifiedObject.text);
-    }
-  };
+      const newText = new fabric.IText("New Text", {
+        left: 50,
+        top: 50,
+        fill: "black",
+      });
 
-  const addText = (text, variable) => {
-    const canvas = canvases[activeCanvasIndex];
-
-    console.log(text, canvas)
-    const itext = new fabric.IText(text, {
-      left: 100,
-      top: 100,
-      fontSize: 30,
-      fill: 'black',
-      width: 200,
-      id: variable || '',
-    });
-    canvas.add(itext);
-    canvas.renderAll();
-  };
-
-  const handleDeleteSelected = () => {
-    const canvas = canvases[activeCanvasIndex];
-    if (selectedComponent) {
-      canvas.remove(selectedComponent);
+      // Add the text after the canvas is rendered
       canvas.renderAll();
-      setSelectedComponent(null);
-    }
-  };
-
-  const handleConvertToJSON = () => {
-    const canvas = canvases[activeCanvasIndex];
-    const canvasJSON = JSON.stringify(canvas.toObject(['id', 'left', 'top', 'type', 'text', 'fill', 'fontSize', 'fontWeight', 'fontStyle']));
-    const jsonWithDimensions = {
-      canvasWidth: canvas.width,
-      canvasHeight: canvas.height,
-      objects: JSON.parse(canvasJSON).objects,
-      backgroundImage: JSON.parse(canvasJSON).backgroundImage,
-    };
-
-    const blob = new Blob([JSON.stringify(jsonWithDimensions)], { type: 'application/json' });
-    saveAs(blob, 'canvas.json');
-  };
-
-
-  const handleAddText = () => {
-    const text = 'edit your text here';
-    if (text !== null) {
-      addText(text);
+      canvas.add(newText);
     }
   };
 
   return (
-    <div className='m-10'>
-      <Global
-        styles={css`
-          ${fonts.map((font) => {
-            const { name, variations } = font;
-            return Object.keys(variations).map((variation) => {
-              const { url } = variations[variation];
-              return `
-                @font-face {
-                  font-family: '${name}';
-                  font-style: ${variation.includes('italic') ? 'italic' : 'normal'};
-                  font-weight: ${variation.includes('bold') ? 'bold' : 'normal'};
-                  src: url(${url}) format('truetype');
-                }
-              `;
-            });
-          })}
-        `}
-      />
-      <div>
-      <button className='p-2 bg-gray-200 m-3' onClick={handleAddText}>Add Text Block</button>
-      </div>
-      <div>
-        {/* Render canvas selector buttons */}
-        {canvases.map((canvas, index) => (
-          <button key={index} onClick={() => setActiveCanvasIndex(index)}>
-            Canvas {index + 1}
-          </button>
-        ))}
-        <button className='p-2 bg-gray-200 m-3' onClick={handleAddCanvas}>
-          Add Canvas
+    <div>
+        <h1 className="m-10">**work in progress</h1>
+      <div className="m-10">
+        <button
+          onClick={addITextToSelectedCanvas}
+          className="mt-4 p-2 bg-blue-500 text-white"
+        >
+          Add Text
         </button>
-
-        {/* ... (other UI elements) */}
-
-        {/* Render canvases */}
-        {canvases.map((canvas, index) => (
-          <div key={index}>
-            <canvas
-            className={`border-4 border-blue-500 ${index !== activeCanvasIndex && 'hidden'}`}
-            id={`canvas-${index + 1}`}
-            ref={(ref) => ref && (canvas.canvasElement = ref)}
-            />
+      </div>
+      <div className="flex flex-col m-10 gap-5">
+        {canvasRefs.map((canvasRef, index) => (
+          <div
+            key={index}
+            className={`border-2 w-[400px] h-[300px] ${
+              selectedCanvas === index ? "border-yellow-500" : ""
+            }`}
+          >
+            <canvas ref={canvasRef} width={400} height={300} />
           </div>
         ))}
       </div>
-
-      {/* ... (other UI elements) */}
-      <button className='p-2 bg-gray-200 m-3' onClick={handleConvertToJSON}>
-        Convert to JSON
-      </button>
     </div>
   );
 };
 
-export default EditorMultiPage;
+export default EditorMP;
