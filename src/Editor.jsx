@@ -27,8 +27,9 @@ const Editor = () => {
   const variables = ['birthdate', 'address', 'fname', 'lname'];
   const [canvasWidth, setCanvasWidth] = useState(800);
   const [canvasHeight, setCanvasHeight] = useState(600);
-  const [selectedFont, setSelectedFont] = useState('Arial');
+  const [selectedFont, setSelectedFont] = useState('');
   const [fontVariations, setFontVariations] = useState([
+    '',
     'Arial',
     'Lato',
     'Montserrat',
@@ -37,7 +38,6 @@ const Editor = () => {
     'Optima',
     'Old English Text MT',
     'Cambria',
-    'Verdana',
     'Bodoni MT',
     'Calibri',
     'ITC Galliard',
@@ -55,7 +55,8 @@ const Editor = () => {
     'Barlow',
     'Arial Narrow',
     'Arial MT',
-    'Multicolore'
+    'Multicolore',
+    'Veranda',
   ]);
 
   const getS3Url = (path) => {
@@ -103,6 +104,7 @@ const Editor = () => {
       fontSize: 30,
       fill: 'black',
       width: 200,
+      fontFamily: "New Times Roman",
       isWrapping: true,
       dynamicMinWidth: 100,
       id: variable? variable : ""
@@ -212,14 +214,14 @@ const Editor = () => {
       const { fileName, url } = variations[variation];
   
       // Add the font-face styles to the global stylesheet
-      globalStyles += `
-        @font-face {
-          font-family: '${name}';
-          font-style: ${variation.includes('italic') ? 'italic' : 'normal'};
-          font-weight: ${variation.includes('bold') ? 'bold' : 'normal'};
-          src: url(${getS3Url(url)}) format('truetype');
-        }
-      `;
+      // globalStyles += `
+      //   @font-face {
+      //     font-family: '${name}';
+      //     font-style: ${variation.includes('italic') ? 'italic' : 'normal'};
+      //     font-weight: ${variation.includes('bold') ? 'bold' : 'normal'};
+      //     src: url(${getS3Url(url)}) format('truetype');
+      //   }
+      // `;
     });
   };
   
@@ -471,7 +473,8 @@ const Editor = () => {
             value={selectedColor}
             onChange={(e) => handleColorChange(e.target.value)}
           />
-          <select value={selectedFont} onChange={(e) => handleFontChange(e.target.value)}>
+          <label className='ml-3'>Font:</label>
+          <select className='mr-5 p-2' value={selectedFont} onChange={(e) => handleFontChange(e.target.value)}>
             {
               fontVariations.map((font) => <option>{font}</option>)
             }
