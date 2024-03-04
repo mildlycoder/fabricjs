@@ -4,6 +4,7 @@ import VariableSidebar from './variableSidebar';
 import { saveAs } from 'file-saver';
 import { Global, css } from '@emotion/react';
 import fontjson from './font.json'
+import FontFaceObserver from 'fontfaceobserver'
 
 const Editor = () => {
   const fonts = fontjson.fonts
@@ -57,11 +58,30 @@ const Editor = () => {
     'Multicolore'
   ]);
 
+  const getS3Url = (path) => {
+    let REGION = 'ap-southeast-1';
+    let BUCKET_NAME = 'filpass-upload-bucket-non-production';
+    const url = window.location.origin;
+    if (url === 'https://edufied.info') {
+      BUCKET_NAME = 'ciap-production-uploadbucket-1';
+    }
+  
+    // Check if the path is already a full URL
+    if (path.startsWith('http')) {
+      return path;
+    } else {
+      return `https://s3.${REGION}.amazonaws.com/${BUCKET_NAME}/${path}`;
+    }
+  };
+  
+
   const globalStyles = css`
   ${fonts.map((font) => {
     const { name, variations } = font;
     return Object.keys(variations).map((variation) => {
-      const { fileName, url } = variations[variation];
+      const { fileName } = variations[variation];
+      let {url} = variations[variation]
+      url = getS3Url(url)
       return `
         @font-face {
           font-family: '${name}';
@@ -161,6 +181,53 @@ const Editor = () => {
       addText(text);
     }
   };
+
+  const loadFonts = async (fontInfo) => {
+    const { name, variations } = fontInfo;
+    const fontPromises = Object.keys(variations).map((variation) => {
+      const { fileName, url } = variations[variation];
+      const font = new FontFaceObserver(name, {
+        weight: variation.includes('bold') ? 'bold' : 'normal',
+        style: variation.includes('italic') ? 'italic' : 'normal',
+      });
+  
+      return font.load(url);
+    });
+  
+    try {
+      await Promise.all(fontPromises);
+      console.log(`${name} loaded successfully.`);
+    } catch (error) {
+      console.error(`Error loading ${name} font:`, error);
+    }
+  };
+  
+
+  const loadCustomFont = async (fontInfo) => {
+    const { name, variations } = fontInfo;
+  
+    // Load fonts asynchronously
+    await loadFonts(fontInfo);
+    Object.keys(variations).forEach((variation) => {
+      const { fileName, url } = variations[variation];
+  
+      // Add the font-face styles to the global stylesheet
+      globalStyles += `
+        @font-face {
+          font-family: '${name}';
+          font-style: ${variation.includes('italic') ? 'italic' : 'normal'};
+          font-weight: ${variation.includes('bold') ? 'bold' : 'normal'};
+          src: url(${getS3Url(url)}) format('truetype');
+        }
+      `;
+    });
+  };
+  
+  
+  useEffect(() => {
+    fonts.forEach((font) => loadCustomFont(font));
+  }, []); 
+  
 
   const handleInputChange = (e) => {
     setInputText(e.target.value);
@@ -298,39 +365,6 @@ const Editor = () => {
       setIsItalic(!isItalic);
     }
   };
-
-  const loadCustomFont = (fontInfo) => {
-    const { name, variations } = fontInfo;
-  
-    Object.keys(variations).forEach((variation) => {
-      // const { fileName, url } = variations[variation];
-  
-      // // Create a temporary text object to trigger font loading
-      // const tempText = new fabric.Text(' ', {
-      //   fontFamily: name,
-      //   fontWeight: variation.includes('bold') ? 'bold' : 'normal',
-      //   fontStyle: variation.includes('italic') ? 'italic' : 'normal',
-      // });
-  
-      // // Set the font URL for the variation
-      // tempText.set({
-      //   fontFamily: name,
-      //   fontWeight: variation.includes('bold') ? 'bold' : 'normal',
-      //   fontStyle: variation.includes('italic') ? 'italic' : 'normal',
-      //   src: `url(${url}) format('truetype')`, // or 'opentype'
-      // });
-  
-      // // Add the temporary text object to the canvas (this is not visible)
-      // canvasInstance.current.add(tempText);
-    });
-  };
-  
-  // Inside your Editor component
-  useEffect(() => {
-    // Load custom fonts on component mount
-    fonts.forEach((font) => loadCustomFont(font));
-  }, []); // Ensure it only runs once on mount
-  
   
 
   const handleFontChange = (font) => {
