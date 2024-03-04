@@ -96,21 +96,20 @@ const Editor = () => {
 `;
 
 
-  const addText = (text, variable) => {
-    const canvas = canvasInstance.current;
-    const textbox = new fabric.Textbox(text, {
-      left: 100,
-      top: 100,
-      fontSize: 30,
-      fill: 'black',
-      width: 200,
-      fontFamily: "New Times Roman",
-      isWrapping: true,
-      dynamicMinWidth: 100,
-      id: variable? variable : ""
-    });
-    canvas.add(textbox);
-  };
+const addText = (text, variable) => {
+  const canvas = canvasInstance.current;
+  const itext = new fabric.IText(text, {
+    left: 100,
+    top: 100,
+    fontSize: 30,
+    fill: 'black',
+    width: 200,
+    fontFamily: "New Times Roman",
+    id: variable ? variable : "",
+  });
+  canvas.add(itext);
+};
+
 
   const addImage = (imageUrl, left = 0, top = 0) => {
     const canvas = canvasInstance.current;
@@ -148,6 +147,10 @@ const Editor = () => {
     canvas.on('selection:created', () => {
       const selectedObject = canvas.getActiveObject();
       if (selectedObject && selectedObject.type === 'textbox') {
+        // Text selected, update properties or perform other actions
+        console.log('Text selected:', selectedObject);
+        setSelectedComponent(selectedObject);
+      }if (selectedObject && selectedObject.type === 'i-text') {
         // Text selected, update properties or perform other actions
         console.log('Text selected:', selectedObject);
         setSelectedComponent(selectedObject);
@@ -334,54 +337,101 @@ const Editor = () => {
     setSelectedVariableToAdd('');
   };
 
+  const handleFontChange = (font) => {
+    if (selectedComponent && selectedComponent.type === 'i-text') {
+      const selectionStart = selectedComponent.selectionStart;
+      const selectionEnd = selectedComponent.selectionEnd;
+  
+      if (selectionStart !== 0 && selectionEnd !== 0) {
+        const selectedFontInfo = fonts.find((f) => f.name === font);
+        if (selectedFontInfo) {
+          loadCustomFont(selectedFontInfo); // Load the custom font
+          selectedComponent.setSelectionStyles({ fontFamily: font }, selectionStart, selectionEnd);
+        }
+      } else {
+        const selectedFontInfo = fonts.find((f) => f.name === font);
+        if (selectedFontInfo) {
+          loadCustomFont(selectedFontInfo); // Load the custom font
+          selectedComponent.set({ fontFamily: font });
+        }
+      }
+  
+      canvasInstance.current.renderAll();
+      setSelectedFont(font);
+    }
+  };
+  
   const handleColorChange = (color) => {
-    if (selectedComponent && selectedComponent.type === 'textbox') {
-      selectedComponent.set({ fill: color });
+    if (selectedComponent && selectedComponent.type === 'i-text') {
+      const selectionStart = selectedComponent.selectionStart;
+      const selectionEnd = selectedComponent.selectionEnd;
+      console.log(selectionStart, selectionEnd)
+      if (selectionStart !== 0 || selectionEnd !== 0) {
+        console.log("selection")
+        selectedComponent.setSelectionStyles({ fill: color }, selectionStart, selectionEnd);
+      } else {
+        console.log("whole")
+        selectedComponent.set({ fill: color });
+      }
+  
       canvasInstance.current.renderAll();
       setSelectedColor(color);
     }
   };
+  
+  
 
   const handleFontSizeChange = (fontSize) => {
-    if (selectedComponent && selectedComponent.type === 'textbox') {
-      selectedComponent.set({ fontSize: fontSize });
+    if (selectedComponent && selectedComponent.type === 'i-text') {
+      const selectionStart = selectedComponent.selectionStart;
+      const selectionEnd = selectedComponent.selectionEnd;
+  
+      if (selectionStart !== 0 || selectionEnd !== 0) {
+        selectedComponent.setSelectionStyles({ fontSize: parseInt(fontSize, 10) }, selectionStart, selectionEnd);
+      } else {
+        selectedComponent.set({ fontSize: parseInt(fontSize, 10) });
+      }
+      
       canvasInstance.current.renderAll();
       setSelectedFontSize(fontSize);
     }
   };
-
+  
   const handleBoldToggle = () => {
-    if (selectedComponent && selectedComponent.type === 'textbox') {
-      const currentFontWeight = selectedComponent.get('fontWeight') || 'normal';
-      selectedComponent.set({ fontWeight: currentFontWeight === 'bold' ? 'normal' : 'bold' });
+    if (selectedComponent && selectedComponent.type === 'i-text') {
+      const selectionStart = selectedComponent.selectionStart;
+      const selectionEnd = selectedComponent.selectionEnd;
+      if (selectionStart !== 0 || selectionEnd !== 0) {
+        const currentFontWeight = selectedComponent.getSelectionStyles('fontWeight', selectionStart, selectionEnd) || 'normal';
+        selectedComponent.setSelectionStyles({ fontWeight: currentFontWeight === 'bold' ? 'normal' : 'bold' }, selectionStart, selectionEnd);
+      } else {
+        const currentFontWeight = selectedComponent.get('fontWeight') || 'normal';
+        selectedComponent.set({ fontWeight: currentFontWeight === 'bold' ? 'normal' : 'bold' });
+      }
+      
       canvasInstance.current.renderAll();
       setIsBold(!isBold);
     }
   };
-
+  
   const handleItalicToggle = () => {
-    if (selectedComponent && selectedComponent.type === 'textbox') {
-      const currentFontStyle = selectedComponent.get('fontStyle') || 'normal';
-      selectedComponent.set({ fontStyle: currentFontStyle === 'italic' ? 'normal' : 'italic' });
+    if (selectedComponent && selectedComponent.type === 'i-text') {
+      const selectionStart = selectedComponent.selectionStart;
+      const selectionEnd = selectedComponent.selectionEnd;
+  
+      if (selectionStart !== 0 || selectionEnd !== 0) {
+        const currentFontStyle = selectedComponent.getSelectionStyles('fontStyle', selectionStart, selectionEnd) || 'normal';
+        selectedComponent.setSelectionStyles({ fontStyle: currentFontStyle === 'italic' ? 'normal' : 'italic' }, selectionStart, selectionEnd);
+      } else {
+        const currentFontStyle = selectedComponent.get('fontStyle') || 'normal';
+        selectedComponent.set({ fontStyle: currentFontStyle === 'italic' ? 'normal' : 'italic' });
+      }
+  
       canvasInstance.current.renderAll();
       setIsItalic(!isItalic);
     }
   };
   
-
-  const handleFontChange = (font) => {
-    if (selectedComponent && selectedComponent.type === 'textbox') {
-      // Assuming 'fonts' is the array of font information in your JSON
-      const selectedFontInfo = fonts.find((f) => f.name === font);
-  
-      if (selectedFontInfo) {
-        loadCustomFont(selectedFontInfo); // Load the custom font
-        selectedComponent.set({ fontFamily: font });
-        canvasInstance.current.renderAll();
-        setSelectedFont(font);
-      }
-    }
-  };
   
   useEffect(() => {
     canvasInstance.current.renderAll();
@@ -465,7 +515,7 @@ const Editor = () => {
           <input type="text" value={newY} onChange={(e) => setNewY(e.target.value)} />
           <button className='p-2 bg-gray-200 m-3' onClick={handleUpdateCoordinates}>Update Coordinates</button>
         </div>
-        {selectedComponent && selectedComponent.type === 'textbox' && (
+        {selectedComponent && selectedComponent.type === 'i-text' && (
         <div>
           <label>Color:</label>
           <input
