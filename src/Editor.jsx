@@ -72,7 +72,6 @@ const Editor = () => {
       `;
     });
   })}
-  /* Add other global styles if needed */
 `;
 
 
@@ -304,25 +303,25 @@ const Editor = () => {
     const { name, variations } = fontInfo;
   
     Object.keys(variations).forEach((variation) => {
-      const { fileName, url } = variations[variation];
+      // const { fileName, url } = variations[variation];
   
-      // Create a temporary text object to trigger font loading
-      const tempText = new fabric.Text(' ', {
-        fontFamily: name,
-        fontWeight: variation.includes('bold') ? 'bold' : 'normal',
-        fontStyle: variation.includes('italic') ? 'italic' : 'normal',
-      });
+      // // Create a temporary text object to trigger font loading
+      // const tempText = new fabric.Text(' ', {
+      //   fontFamily: name,
+      //   fontWeight: variation.includes('bold') ? 'bold' : 'normal',
+      //   fontStyle: variation.includes('italic') ? 'italic' : 'normal',
+      // });
   
-      // Set the font URL for the variation
-      tempText.set({
-        fontFamily: name,
-        fontWeight: variation.includes('bold') ? 'bold' : 'normal',
-        fontStyle: variation.includes('italic') ? 'italic' : 'normal',
-        src: `url(${url}) format('truetype')`, // or 'opentype'
-      });
+      // // Set the font URL for the variation
+      // tempText.set({
+      //   fontFamily: name,
+      //   fontWeight: variation.includes('bold') ? 'bold' : 'normal',
+      //   fontStyle: variation.includes('italic') ? 'italic' : 'normal',
+      //   src: `url(${url}) format('truetype')`, // or 'opentype'
+      // });
   
-      // Add the temporary text object to the canvas (this is not visible)
-      canvasInstance.current.add(tempText);
+      // // Add the temporary text object to the canvas (this is not visible)
+      // canvasInstance.current.add(tempText);
     });
   };
   
