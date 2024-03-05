@@ -8,7 +8,11 @@ const EditorMP = () => {
 
   useEffect(() => {
     const canvases = canvasRefs.map((canvasRef, index) => {
-      const canvas = new fabric.Canvas(canvasRef.current);
+      console.log(canvasRef)
+      const canvasId = `canvas-${index}`;
+      const canvas = new fabric.Canvas(canvasRef.current, { 
+        id: canvasId 
+      });
 
       // Additional configurations for each canvas can be added here
       setCanvasInstances((prevInstances) => [...prevInstances, canvas]);
@@ -48,19 +52,19 @@ const EditorMP = () => {
   const addITextToSelectedCanvas = () => {
     if (selectedCanvas !== null) {
       const canvas = canvasInstances[selectedCanvas];
-
+      
       const newText = new fabric.IText("New Text", {
         left: 50,
         top: 50,
         fill: "black",
       });
-
-      // Add the text after the canvas is rendered
-      canvas.renderAll();
+      console.log(canvas)
       canvas.add(newText);
     }
   };
-
+  console.log(selectedCanvas)
+  console.log(canvasRefs)
+  console.log(canvasInstances)
   return (
     <div>
         <h1 className="m-10">**work in progress</h1>
@@ -80,7 +84,7 @@ const EditorMP = () => {
               selectedCanvas === index ? "border-yellow-500" : ""
             }`}
           >
-            <canvas ref={canvasRef} width={400} height={300} />
+            <canvas ref={canvasRef} width={400} height={300} /> 
           </div>
         ))}
       </div>
