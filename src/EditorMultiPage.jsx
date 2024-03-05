@@ -10,9 +10,7 @@ const EditorMP = () => {
     const canvases = canvasRefs.map((canvasRef, index) => {
       console.log(canvasRef)
       const canvasId = `canvas-${index}`;
-      const canvas = new fabric.Canvas(canvasRef.current, { 
-        id: canvasId 
-      });
+      const canvas = new fabric.Canvas(canvasId);
 
       // Additional configurations for each canvas can be added here
       setCanvasInstances((prevInstances) => [...prevInstances, canvas]);
@@ -84,7 +82,7 @@ const EditorMP = () => {
               selectedCanvas === index ? "border-yellow-500" : ""
             }`}
           >
-            <canvas ref={canvasRef} width={400} height={300} /> 
+            <canvas id={`canvas-${index}`} ref={canvasRef} width={400} height={300} /> 
           </div>
         ))}
       </div>
