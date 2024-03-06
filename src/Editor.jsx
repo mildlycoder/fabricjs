@@ -465,6 +465,7 @@ const addText = (text, variable) => {
   
   const handleConvertToJSON = () => {
     const canvas = canvasInstance.current;
+    canvas.includeDefaultValues = false
     const canvasJSON = JSON.stringify(canvas.toObject(['id', 'left', 'top', 'type', 'text', 'fill', 'fontSize', 'fontWeight', 'fontStyle']));
     console.log(canvasJSON)
     const jsonWithDimensions = {
