@@ -58,6 +58,7 @@ const Editor = () => {
     'Multicolore',
     'Veranda',
   ]);
+  const [allowTwoLines, setAllowTwoLines] = useState(false);
 
   const getS3Url = (path) => {
     let REGION = 'ap-southeast-1';
@@ -66,7 +67,7 @@ const Editor = () => {
     if (url === 'https://edufied.info') {
       BUCKET_NAME = 'ciap-production-uploadbucket-1';
     }
-  
+
     // Check if the path is already a full URL
     if (path.startsWith('http')) {
       return path;
@@ -74,14 +75,14 @@ const Editor = () => {
       return `https://s3.${REGION}.amazonaws.com/${BUCKET_NAME}/${path}`;
     }
   };
-  
+
 
   const globalStyles = css`
   ${fonts.map((font) => {
     const { name, variations } = font;
     return Object.keys(variations).map((variation) => {
       const { fileName } = variations[variation];
-      let {url} = variations[variation]
+      let { url } = variations[variation]
       url = getS3Url(url)
       return `
         @font-face {
@@ -95,21 +96,38 @@ const Editor = () => {
   })}
 `;
 
+  const addText = (text, variable) => {
+    const canvas = canvasInstance.current;
+    const textboxWidth = 200; // Set your desired fixed width
 
-const addText = (text, variable) => {
-  const canvas = canvasInstance.current;
-  const itext = new fabric.IText(text, {
-    left: 100,
-    top: 100,
-    fontSize: 30,
-    fill: 'black',
-    width: 200,
-    fontFamily: "New Times Roman",
-    id: variable ? variable : "",
-  });
-  canvas.add(itext);
-};
+    const itext = new fabric.IText(text, {
+      left: 100,
+      top: 100,
+      fontSize: 30,
+      fill: 'black',
+      width: textboxWidth, // Set the fixed width
+      maxWidth: textboxWidth, // Set the maxWidth to the same value as width
+      fontFamily: "New Times Roman",
+      id: variable ? variable : "",
+    });
 
+    // Calculate the actual width of the text
+    const textWidth = itext.textWidth * itext.scaleX;
+
+    // Adjust font size and scale if text exceeds the textbox width
+    while (textWidth > textboxWidth && itext.fontSize > 1) {
+      const newFontSize = itext.fontSize - 1;
+      const scaleRatio = newFontSize / itext.fontSize;
+
+      itext.set({
+        fontSize: newFontSize,
+        scaleX: scaleRatio,
+        scaleY: scaleRatio,
+      });
+    }
+
+    canvas.add(itext);
+  };
 
   const addImage = (imageUrl, left = 0, top = 0) => {
     const canvas = canvasInstance.current;
@@ -129,7 +147,7 @@ const addText = (text, variable) => {
   };
 
   useEffect(() => {
-    if(selectedComponent){
+    if (selectedComponent) {
       setNewX(selectedComponent.left)
       setNewY(selectedComponent.top)
       console.log(newX, newY)
@@ -150,7 +168,7 @@ const addText = (text, variable) => {
         // Text selected, update properties or perform other actions
         console.log('Text selected:', selectedObject);
         setSelectedComponent(selectedObject);
-      }if (selectedObject && selectedObject.type === 'i-text') {
+      } if (selectedObject && selectedObject.type === 'i-text') {
         // Text selected, update properties or perform other actions
         console.log('Text selected:', selectedObject);
         setSelectedComponent(selectedObject);
@@ -174,11 +192,64 @@ const addText = (text, variable) => {
       }
     });
 
+    canvas.on('object:modified', (e) => {
+      const modifiedObject = e.target;
+
+      if (modifiedObject && modifiedObject.type === 'i-text') {
+        // Text modified, update properties or perform other actions
+        console.log('Text modified:', modifiedObject.text);
+
+        // Calculate the actual width of the modified text
+        const textWidth = modifiedObject.textWidth * modifiedObject.scaleX;
+
+        // Adjust font size and scale if text exceeds the textbox width
+        const textboxWidth = modifiedObject.width;
+        while (textWidth > textboxWidth && modifiedObject.fontSize > 1) {
+          const newFontSize = modifiedObject.fontSize - 1;
+          const scaleRatio = newFontSize / modifiedObject.fontSize;
+
+          modifiedObject.set({
+            fontSize: newFontSize,
+            scaleX: scaleRatio,
+            scaleY: scaleRatio,
+          });
+        }
+
+        canvas.renderAll();
+      }
+    });
+
+
     // Cleanup function
     return () => {
       canvas.dispose();
     };
   }, [canvasWidth, canvasHeight]);
+
+
+  useEffect(() => {
+    const handleSelection = () => {
+      const canvas = canvasInstance.current;
+      const selectedObject = canvas.getActiveObject();
+      if (selectedObject && selectedObject.type === 'i-text') {
+        setSelectedComponent(selectedObject);
+        setInputText(selectedObject.text);
+      } else {
+        setSelectedComponent(null);
+        setInputText('');
+      }
+    };
+
+    canvasInstance.current.on('selection:created', handleSelection);
+    canvasInstance.current.on('selection:updated', handleSelection);
+    canvasInstance.current.on('selection:cleared', handleSelection);
+
+    return () => {
+      canvasInstance.current.off('selection:created', handleSelection);
+      canvasInstance.current.off('selection:updated', handleSelection);
+      canvasInstance.current.off('selection:cleared', handleSelection);
+    };
+  }, []);
 
   const handleAddText = () => {
     const text = 'edit your text here';
@@ -195,10 +266,10 @@ const addText = (text, variable) => {
         weight: variation.includes('bold') ? 'bold' : 'normal',
         style: variation.includes('italic') ? 'italic' : 'normal',
       });
-  
+
       return font.load(url);
     });
-  
+
     try {
       await Promise.all(fontPromises);
       console.log(`${name} loaded successfully.`);
@@ -206,16 +277,16 @@ const addText = (text, variable) => {
       console.error(`Error loading ${name} font:`, error);
     }
   };
-  
+
 
   const loadCustomFont = async (fontInfo) => {
     const { name, variations } = fontInfo;
-  
+
     // Load fonts asynchronously
     await loadFonts(fontInfo);
     Object.keys(variations).forEach((variation) => {
       const { fileName, url } = variations[variation];
-  
+
       // Add the font-face styles to the global stylesheet
       // globalStyles += `
       //   @font-face {
@@ -227,29 +298,12 @@ const addText = (text, variable) => {
       // `;
     });
   };
-  
-  
+
+
   useEffect(() => {
     fonts.forEach((font) => loadCustomFont(font));
-  }, []); 
-  
+  }, []);
 
-  const handleInputChange = (e) => {
-    setInputText(e.target.value);
-
-    // Update text for all elements with the same id
-    const objects = canvasInstance.current.getObjects();
-    const selectedId = selectedComponent?.id;
-    if (selectedId) {
-      objects.forEach((obj) => {
-        if (obj.type === 'textbox' && obj.id === selectedId) {
-          obj.set({ text: e.target.value });
-        }
-      });
-
-      canvasInstance.current.renderAll();
-    }
-  };
 
   const handleAddBackgroundImage = () => {
     const imageUrl = prompt('Enter the URL for the background image:');
@@ -341,7 +395,7 @@ const addText = (text, variable) => {
     if (selectedComponent && selectedComponent.type === 'i-text') {
       const selectionStart = selectedComponent.selectionStart;
       const selectionEnd = selectedComponent.selectionEnd;
-  
+
       if (selectionStart !== 0 && selectionEnd !== 0) {
         const selectedFontInfo = fonts.find((f) => f.name === font);
         if (selectedFontInfo) {
@@ -355,12 +409,12 @@ const addText = (text, variable) => {
           selectedComponent.set({ fontFamily: font });
         }
       }
-  
+
       canvasInstance.current.renderAll();
       setSelectedFont(font);
     }
   };
-  
+
   const handleColorChange = (color) => {
     if (selectedComponent && selectedComponent.type === 'i-text') {
       const selectionStart = selectedComponent.selectionStart;
@@ -373,30 +427,30 @@ const addText = (text, variable) => {
         console.log("whole")
         selectedComponent.set({ fill: color });
       }
-  
+
       canvasInstance.current.renderAll();
       setSelectedColor(color);
     }
   };
-  
-  
+
+
 
   const handleFontSizeChange = (fontSize) => {
     if (selectedComponent && selectedComponent.type === 'i-text') {
       const selectionStart = selectedComponent.selectionStart;
       const selectionEnd = selectedComponent.selectionEnd;
-  
+
       if (selectionStart !== 0 || selectionEnd !== 0) {
         selectedComponent.setSelectionStyles({ fontSize: parseInt(fontSize, 10) }, selectionStart, selectionEnd);
       } else {
         selectedComponent.set({ fontSize: parseInt(fontSize, 10) });
       }
-      
+
       canvasInstance.current.renderAll();
       setSelectedFontSize(fontSize);
     }
   };
-  
+
   const handleBoldToggle = () => {
     if (selectedComponent && selectedComponent.type === 'i-text') {
       const selectionStart = selectedComponent.selectionStart;
@@ -408,17 +462,17 @@ const addText = (text, variable) => {
         const currentFontWeight = selectedComponent.get('fontWeight') || 'normal';
         selectedComponent.set({ fontWeight: currentFontWeight === 'bold' ? 'normal' : 'bold' });
       }
-      
+
       canvasInstance.current.renderAll();
       setIsBold(!isBold);
     }
   };
-  
+
   const handleItalicToggle = () => {
     if (selectedComponent && selectedComponent.type === 'i-text') {
       const selectionStart = selectedComponent.selectionStart;
       const selectionEnd = selectedComponent.selectionEnd;
-  
+
       if (selectionStart !== 0 || selectionEnd !== 0) {
         const currentFontStyle = selectedComponent.getSelectionStyles('fontStyle', selectionStart, selectionEnd) || 'normal';
         selectedComponent.setSelectionStyles({ fontStyle: currentFontStyle === 'italic' ? 'normal' : 'italic' }, selectionStart, selectionEnd);
@@ -426,19 +480,19 @@ const addText = (text, variable) => {
         const currentFontStyle = selectedComponent.get('fontStyle') || 'normal';
         selectedComponent.set({ fontStyle: currentFontStyle === 'italic' ? 'normal' : 'italic' });
       }
-  
+
       canvasInstance.current.renderAll();
       setIsItalic(!isItalic);
     }
   };
-  
-  
+
+
   useEffect(() => {
     canvasInstance.current.renderAll();
-  },[selectedComponent, selectedFont])
+  }, [selectedComponent, selectedFont])
 
 
-  
+
   const handleDeleteSelected = () => {
     if (selectedComponent) {
       const canvas = canvasInstance.current;
@@ -449,7 +503,7 @@ const addText = (text, variable) => {
   };
 
   useEffect(() => {
-  
+
     const handleKeyDown = (e) => {
       if (e.keyCode === 46) {
         handleDeleteSelected();
@@ -460,9 +514,64 @@ const addText = (text, variable) => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleDeleteSelected]);
-  
 
-  
+
+
+
+  const handleInputChange = (e) => {
+    const newText = e.target.value;
+    setInputText(newText);
+
+    if (selectedComponent) {
+      selectedComponent.set('text', newText);
+
+      // Autoshrinking logic
+      const maxWidth = selectedComponent.width;
+      const maxCharactersPerLine = 50;
+
+      let formattedText = newText;
+      const lines = formattedText.split('\n');
+
+      if (allowTwoLines && lines.length === 1) {
+        // Logic to split text into lines while preserving word boundaries
+        formattedText = splitTextIntoLines(newText, maxCharactersPerLine);
+        selectedComponent.set('text', formattedText);
+      }
+
+      const textWidth = selectedComponent.getBoundingRect().width;
+      if (textWidth > maxWidth) {
+        // Adjust font size based on text width
+        const scaleFactor = maxWidth / textWidth;
+        const newFontSize = selectedComponent.fontSize * scaleFactor;
+        selectedComponent.set('fontSize', newFontSize);
+      } else {
+        // Restore original font size if text length decreases
+        if (newText.length < maxCharactersPerLine) {
+          selectedComponent.set('fontSize', originalFontSize);
+        }
+      }
+
+      canvasInstance.current.renderAll();
+    }
+  };
+
+  // Function to split text into lines while preserving word boundaries
+  function splitTextIntoLines(text, maxCharactersPerLine) {
+    const words = text.split(/\s+/);
+    let line = '';
+    let lines = [];
+    words.forEach(word => {
+      if ((line + word).length <= maxCharactersPerLine) {
+        line += (line === '' ? '' : ' ') + word;
+      } else {
+        lines.push(line);
+        line = word;
+      }
+    });
+    lines.push(line);
+    return lines.join('\n');
+  }
+
   const handleConvertToJSON = () => {
     const canvas = canvasInstance.current;
     canvas.includeDefaultValues = false
@@ -474,7 +583,7 @@ const addText = (text, variable) => {
       objects: JSON.parse(canvasJSON).objects,
       backgroundImage: JSON.parse(canvasJSON).backgroundImage
     };
-    
+
     console.log(jsonWithDimensions);
 
     const blob = new Blob([JSON.stringify(jsonWithDimensions)], { type: 'application/json' });
@@ -485,17 +594,17 @@ const addText = (text, variable) => {
     <div className='m-10'>
       <Global styles={globalStyles} />
       <div>
-      <VariableSidebar 
-       variables={variables}
-       variableCounts={variableCounts}
-       onVariableValueChange={handleVariableValueChange}
-      />
+        <VariableSidebar
+          variables={variables}
+          variableCounts={variableCounts}
+          onVariableValueChange={handleVariableValueChange}
+        />
         <div>
-        <label>Canvas Width:</label>
-        <input type="number" value={canvasWidth} onChange={(e) => setCanvasWidth(parseInt(e.target.value, 10))} />
-        <label>Canvas Height:</label>
-        <input type="number" value={canvasHeight} onChange={(e) => setCanvasHeight(parseInt(e.target.value, 10))} />
-      </div>
+          <label>Canvas Width:</label>
+          <input type="number" value={canvasWidth} onChange={(e) => setCanvasWidth(parseInt(e.target.value, 10))} />
+          <label>Canvas Height:</label>
+          <input type="number" value={canvasHeight} onChange={(e) => setCanvasHeight(parseInt(e.target.value, 10))} />
+        </div>
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddText}>Add Text Block</button>
         <button className='p-2 bg-gray-200 m-3' onClick={handleAddBackgroundImage}>Add Background Image</button>
         <button className='p-2 bg-gray-200 m-3' onClick={handleRemoveBackgroundImage}>Remove Background Image</button>
@@ -517,69 +626,83 @@ const addText = (text, variable) => {
           <button className='p-2 bg-gray-200 m-3' onClick={handleUpdateCoordinates}>Update Coordinates</button>
         </div>
         {selectedComponent && selectedComponent.type === 'i-text' && (
-        <div>
-          <label>Color:</label>
-          <input
-            type="color"
-            value={selectedColor}
-            onChange={(e) => handleColorChange(e.target.value)}
-          />
-          <label className='ml-3'>Font:</label>
-          <select className='mr-5 p-2' value={selectedFont} onChange={(e) => handleFontChange(e.target.value)}>
-            {
-              fontVariations.map((font) => <option>{font}</option>)
-            }
-          </select>
-
-
-          <label>Font Size:</label>
-          <input
-            type="number"
-            value={selectedFontSize}
-            onChange={(e) => handleFontSizeChange(e.target.value)}
-          />
-           <button className={`p-2 bg-gray-200 m-3 ${isBold ? 'font-bold' : ''}`} onClick={handleBoldToggle}>
-            Bold
-          </button>
-          <button className={`p-2 bg-gray-200 m-3 ${isItalic ? 'italic' : ''}`} onClick={handleItalicToggle}>
-            Italic
-          </button>
-        </div>
-      )}
-        <div>
-        <button className='p-2 bg-gray-200 m-3' onClick={handleAddTextOrVariable}>
-          Add Text/Variable
-        </button>
-        {textToAdd !== null && (
-          <div className='mx-3'>
-            <label>Text:</label>
-            <input type="text" value={textToAdd} onChange={(e) => setTextToAdd(e.target.value)} />
-            <label>Variable:</label>
-            <select value={selectedVariableToAdd} onChange={(e) => setSelectedVariableToAdd(e.target.value)}>
-              <option value="">Select Variable</option>
-              {variables.map((variable) => (
-                <option key={variable} value={variable}>
-                  {variable}
-                </option>
-              ))}
+          <div>
+            <label>Color:</label>
+            <input
+              type="color"
+              value={selectedColor}
+              onChange={(e) => handleColorChange(e.target.value)}
+            />
+            <label className='ml-3'>Font:</label>
+            <select className='mr-5 p-2' value={selectedFont} onChange={(e) => handleFontChange(e.target.value)}>
+              {
+                fontVariations.map((font) => <option>{font}</option>)
+              }
             </select>
+
+
+            <label>Font Size:</label>
+            <input
+              type="number"
+              value={selectedFontSize}
+              onChange={(e) => handleFontSizeChange(e.target.value)}
+            />
+            <button className={`p-2 bg-gray-200 m-3 ${isBold ? 'font-bold' : ''}`} onClick={handleBoldToggle}>
+              Bold
+            </button>
+            <button className={`p-2 bg-gray-200 m-3 ${isItalic ? 'italic' : ''}`} onClick={handleItalicToggle}>
+              Italic
+            </button>
+
+            <input
+              type="checkbox"
+              checked={allowTwoLines}
+              onChange={(e) => setAllowTwoLines(e.target.checked)}
+            />
+            <label>Allow Two Lines</label>
           </div>
         )}
+        <div>
+          <button className='p-2 bg-gray-200 m-3' onClick={handleAddTextOrVariable}>
+            Add Text/Variable
+          </button>
+          {textToAdd !== null && (
+            <div className='mx-3'>
+              <label>Text:</label>
+              <input type="text" value={textToAdd} onChange={(e) => setTextToAdd(e.target.value)} />
+              <label>Variable:</label>
+              <select value={selectedVariableToAdd} onChange={(e) => setSelectedVariableToAdd(e.target.value)}>
+                <option value="">Select Variable</option>
+                {variables.map((variable) => (
+                  <option key={variable} value={variable}>
+                    {variable}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-        <button className='p-2 bg-gray-200 m-3' onClick={handleDeleteSelected}>
-          Delete Selected
-        </button>
-        <button className='p-2 bg-gray-200 m-3' onClick={handleAddOnCanvas}>
-          Add on Canvas
-        </button>
+          <button className='p-2 bg-gray-200 m-3' onClick={handleDeleteSelected}>
+            Delete Selected
+          </button>
+          <button className='p-2 bg-gray-200 m-3' onClick={handleAddOnCanvas}>
+            Add on Canvas
+          </button>
 
-        {selectedComponent && selectedComponent.type === 'textbox' && selectedComponent.id && (
-        <div className='mx-3 '>
-          <label>Edit Variable</label>
-          <input type="text" className='bg-gray-400 p-2 m-3' value={inputText} onChange={handleInputChange} />
+          {selectedComponent && selectedComponent.type === 'i-text' && (
+            <div className='mx-3'>
+              <label>Edit Text:</label>
+              <input type='text' className='bg-gray-200 p-2 m-3' value={inputText} onChange={handleInputChange} />
+            </div>
+          )}
+
+          {selectedComponent && selectedComponent.type === 'textbox' && selectedComponent.id && (
+            <div className='mx-3 '>
+              <label>Edit Variable</label>
+              <input type="text" className='bg-gray-400 p-2 m-3 ' value={inputText} onChange={handleInputChange} />
+            </div>
+          )}
         </div>
-      )}
-      </div>
         <button className='p-2 bg-gray-200 m-3' onClick={handleConvertToJSON}>
           Convert to JSON
         </button>

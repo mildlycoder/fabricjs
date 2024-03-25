@@ -12,7 +12,6 @@ const EditorMP = () => {
       const canvasId = `canvas-${index}`;
       const canvas = new fabric.Canvas(canvasId);
 
-      setCanvasInstances((prevInstances) => [...prevInstances, canvas]);
 
       const text = new fabric.IText(`canvas-${index}`, {
         left: 10,
@@ -29,6 +28,7 @@ const EditorMP = () => {
       return canvas;
     });
 
+    setCanvasInstances(canvases)
     return () => {
       canvases.forEach((canvas) => {
         canvas.dispose();
@@ -79,9 +79,8 @@ const EditorMP = () => {
         {canvasRefs.map((canvasRef, index) => (
           <div
             key={index}
-            className={`border-2 w-[400px] h-[300px] ${
-              selectedCanvas === index ? "border-yellow-500" : ""
-            }`}
+            className={`border-2 w-[400px] h-[300px] ${selectedCanvas === index ? "border-yellow-500" : ""
+              }`}
           >
             <canvas
               id={`canvas-${index}`}
