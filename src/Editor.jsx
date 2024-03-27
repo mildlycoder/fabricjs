@@ -59,7 +59,8 @@ const Editor = () => {
     'Veranda',
   ]);
   const [allowTwoLines, setAllowTwoLines] = useState(false);
-
+  const [maxWidth, setMaxWidth] = useState(100)
+  const [maxFontSize, setMaxFontSize] = useState(10)
   const getS3Url = (path) => {
     let REGION = 'ap-southeast-1';
     let BUCKET_NAME = 'filpass-upload-bucket-non-production';
@@ -188,6 +189,7 @@ const Editor = () => {
       if (modifiedObject && modifiedObject.type === 'textbox') {
         // Text modified, update properties or perform other actions
         console.log(modifiedObject)
+        setAutoShrinkLimits()
         console.log('Text modified:', modifiedObject.text);
       }
     });
@@ -198,23 +200,7 @@ const Editor = () => {
       if (modifiedObject && modifiedObject.type === 'i-text') {
         // Text modified, update properties or perform other actions
         console.log('Text modified:', modifiedObject.text);
-
         // Calculate the actual width of the modified text
-        const textWidth = modifiedObject.textWidth * modifiedObject.scaleX;
-
-        // Adjust font size and scale if text exceeds the textbox width
-        const textboxWidth = modifiedObject.width;
-        while (textWidth > textboxWidth && modifiedObject.fontSize > 1) {
-          const newFontSize = modifiedObject.fontSize - 1;
-          const scaleRatio = newFontSize / modifiedObject.fontSize;
-
-          modifiedObject.set({
-            fontSize: newFontSize,
-            scaleX: scaleRatio,
-            scaleY: scaleRatio,
-          });
-        }
-
         canvas.renderAll();
       }
     });
@@ -526,7 +512,6 @@ const Editor = () => {
       selectedComponent.set('text', newText);
 
       // Autoshrinking logic
-      const maxWidth = selectedComponent.width;
       const maxCharactersPerLine = 50;
 
       let formattedText = newText;
@@ -539,6 +524,7 @@ const Editor = () => {
       }
 
       const textWidth = selectedComponent.getBoundingRect().width;
+      console.log(textWidth, maxWidth)
       if (textWidth > maxWidth) {
         // Adjust font size based on text width
         const scaleFactor = maxWidth / textWidth;
@@ -547,7 +533,9 @@ const Editor = () => {
       } else {
         // Restore original font size if text length decreases
         if (newText.length < maxCharactersPerLine) {
-          selectedComponent.set('fontSize', originalFontSize);
+          const scaleFactor = maxWidth / textWidth;
+          const newFontSize = (selectedComponent.fontSize < maxFontSize) ? selectedComponent.fontSize + 1 : maxFontSize;
+          selectedComponent.set('fontSize', newFontSize);
         }
       }
 
@@ -555,6 +543,17 @@ const Editor = () => {
     }
   };
 
+  useEffect(() => {
+    setAutoShrinkLimits()
+  }, [selectedComponent])
+
+  const setAutoShrinkLimits = () => {
+    if (selectedComponent) {
+      console.log("selected textbox width: ", selectedComponent.width)
+      setMaxWidth(selectedComponent.width)
+      setMaxFontSize(selectedComponent.fontSize)
+    }
+  }
   // Function to split text into lines while preserving word boundaries
   function splitTextIntoLines(text, maxCharactersPerLine) {
     const words = text.split(/\s+/);
@@ -654,12 +653,7 @@ const Editor = () => {
               Italic
             </button>
 
-            <input
-              type="checkbox"
-              checked={allowTwoLines}
-              onChange={(e) => setAllowTwoLines(e.target.checked)}
-            />
-            <label>Allow Two Lines</label>
+
           </div>
         )}
         <div>
@@ -690,9 +684,21 @@ const Editor = () => {
           </button>
 
           {selectedComponent && selectedComponent.type === 'i-text' && (
-            <div className='mx-3'>
+            <div className='mx-3 flex flex-col gap-3 w-[40%]'>
               <label>Edit Text:</label>
               <input type='text' className='bg-gray-200 p-2 m-3' value={inputText} onChange={handleInputChange} />
+              <label>Max width</label>
+              <input type='number' className='bg-gray-200 p-2 m-3' value={maxWidth} onChange={(e) => setMaxWidth(e.target.value)} />
+              <label>Max font Size</label>
+              <input type='number' className='bg-gray-200 p-2 m-3' value={maxFontSize} onChange={(e) => setMaxFontSize(e.target.value)} />
+              <div>
+                <input
+                  type="checkbox"
+                  checked={allowTwoLines}
+                  onChange={(e) => setAllowTwoLines(e.target.checked)}
+                />
+                <label>Allow Two Lines</label>
+              </div>
             </div>
           )}
 
